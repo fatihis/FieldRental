@@ -62,6 +62,7 @@ const MainTemplate = (props) => {
                 Personal
               </MenuItem>
               <MenuItem icon={<RiUserAddLine size={30} />}>
+                <Link to="/personal-anlegen" />
                 Benutzer Anlegen
               </MenuItem>
               <MenuItem icon={<RiUserSearchLine size={30} />}>

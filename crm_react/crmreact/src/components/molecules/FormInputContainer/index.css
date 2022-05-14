@@ -1,0 +1,10 @@
+.input-card-text {
+  top: -11px;
+  left: 15px;
+  background: white;
+}
+.input-card {
+  border: 2px solid #1c6ea4;
+  border-radius: 13px;
+  width: 330px !important;
+}

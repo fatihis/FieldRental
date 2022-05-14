@@ -8,6 +8,7 @@ import MainTemplate from "./components/templates/MainTemplate";
 import Home from "./pages/Home";
 import PersonalMain from "./pages/PersonalMain";
 import "antd/dist/antd.css";
+import AddWorkerPage from "./pages/AddWorkerPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -17,6 +18,7 @@ root.render(
         <Route path="/" element={<MainTemplate />}>
           <Route index element={<Home />} />
           <Route path="personal" element={<PersonalMain />} />
+          <Route path="personal-anlegen" element={<AddWorkerPage />} />
           {/* <Route path="blogs" element={<Blogs />} />
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} /> */}

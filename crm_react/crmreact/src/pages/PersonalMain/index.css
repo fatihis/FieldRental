@@ -37,7 +37,7 @@
 }
 .detail-main-header {
   padding-left: 80px;
-  margin-bottom: 15px;
+  margin-bottom: 0px;
 }
 
 .detail-card-header {
@@ -47,4 +47,9 @@
 .arrow-icon {
   width: 18px;
   height: 18px;
+}
+
+.detail-chart-container {
+  width: 100%;
+  height: 500px;
 }
