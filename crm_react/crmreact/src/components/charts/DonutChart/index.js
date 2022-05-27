@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as d3 from "d3";
 import $ from "jquery";
 import "./index.css";
-const DonutChart = ({ value, chartTitle, chartId }) => {
+const DonutChart = ({ value, chartTitle, chartId, barColor }) => {
   const divRef = useRef();
   var width = 270;
   var height = 180;
@@ -30,7 +30,9 @@ const DonutChart = ({ value, chartTitle, chartId }) => {
     svg.append("g").attr("class", "texts");
 
     var radius = Math.min(width, height) / 2;
-    var color = d3.scaleOrdinal().range(["#EFEFF9", "#4C62F5"]);
+    var color = d3
+      .scaleOrdinal()
+      .range(["#EFEFF9", (barColor = !"" ? barColor : "#4C62F5")]);
     var data = [100 - value, value];
 
     var pie = d3

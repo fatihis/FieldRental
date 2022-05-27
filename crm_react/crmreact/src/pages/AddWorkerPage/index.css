@@ -1,5 +1,13 @@
 .form-column {
   margin-right: 5.5rem;
   max-width: 330px;
-  max-width: 300px;
+}
+h2 {
+  color: #1a054b;
+}
+h4 {
+  font-weight: 500;
+}
+h5 {
+  color: #1c6ea4;
 }

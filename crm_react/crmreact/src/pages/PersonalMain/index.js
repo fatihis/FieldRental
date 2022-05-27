@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./index.css";
 import { Tag, Space } from "antd";
@@ -6,8 +6,12 @@ import AntdTable from "../../components/organisms/AntdTable";
 import upArrow from "../../assets/up-arrow.png";
 import downArrow from "../../assets/arrow-down.png";
 import DonutChart from "../../components/charts/DonutChart";
-import MapChart from "../../components/charts/MapChart";
+import { MainContext } from "../../api/MainContext";
 const PersonalMain = (props) => {
+  const mainContext = useContext(MainContext);
+  const [data, setData] = useState();
+  const colors = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564"];
+
   const columns = [
     {
       title: "Name",
@@ -16,9 +20,21 @@ const PersonalMain = (props) => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Driver License",
+      dataIndex: "driverLisence",
+      key: "driverLisence",
+      render: (tags) => (
+        <>
+          {tags.map((tag, idx) => {
+            let color = colors[idx];
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: "Address",
@@ -26,15 +42,18 @@ const PersonalMain = (props) => {
       key: "address",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
+      title: "Inventory",
+      key: "inventory",
+      dataIndex: "inventory",
       render: (tags) => (
         <>
           {tags.map((tag) => {
             let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
+            if (tag === "Handy") {
               color = "volcano";
+            }
+            if (tag === "Laptop") {
+              color = "blue";
             }
             return (
               <Tag color={color} key={tag}>
@@ -50,81 +69,87 @@ const PersonalMain = (props) => {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>Delete</a>
+          <a>EDIT</a>
         </Space>
       ),
     },
   ];
+  useEffect(() => {
+    mainContext.getPersonalForTableData();
+  }, []);
+  useEffect(() => {
+    setData(mainContext.personalForTableData);
+  }, [mainContext.personalForTableData]);
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "4",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "5",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "6",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "7",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "8",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "9",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
+  // const data = [
+  //   {
+  //     key: "1",
+  //     name: "John Brown",
+  //     age: 32,
+  //     address: "New York No. 1 Lake Park",
+  //     tags: ["nice", "developer"],
+  //   },
+  //   {
+  //     key: "2",
+  //     name: "Jim Green",
+  //     age: 42,
+  //     address: "London No. 1 Lake Park",
+  //     tags: ["loser"],
+  //   },
+  //   {
+  //     key: "3",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  //   {
+  //     key: "4",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  //   {
+  //     key: "5",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  //   {
+  //     key: "6",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  //   {
+  //     key: "7",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  //   {
+  //     key: "8",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  //   {
+  //     key: "9",
+  //     name: "Joe Black",
+  //     age: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //     tags: ["cool", "teacher"],
+  //   },
+  // ];
   return (
     <div className="page-wrapper d-flex align-items-center justify-content-center flex-column position-relative">
       <div className="table-card mb-4 p-3">
-        <AntdTable columns={columns} data={data} />
+        {data ? <AntdTable columns={columns} data={data} /> : ""}
       </div>
       <h3 className="w-100 detail-main-header fw-bold">Statistiken</h3>
       <div className="bottom-detail-wrapper d-flex flex-row align-items-center justify-content-between ">

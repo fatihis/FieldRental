@@ -1,43 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Input, Select, Button, Space, Checkbox, Row, Col } from "antd";
 import { PoweroffOutlined } from "@ant-design/icons";
 import "./index.css";
 import FormInputContainer from "../../components/molecules/FormInputContainer";
+import { MainContext } from "../../api/MainContext";
 const AddWorkerPage = (props) => {
-  const [nameState, setnameState] = useState();
-  const [vornameState, setVornameState] = useState();
-
-  const [hasVehicle, setHasVehicle] = useState();
-  const [currentLocation, setCurrentLocation] = useState();
-  const [vehicleListState, setVehicleListState] = useState();
-  const [isAssigned, setIsAssigned] = useState();
-  const [isInsertSucceded, setIsInsertSucceded] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [vehicle, setVehicle] = useState();
-  const [vehiclePos, setVehiclePos] = useState(false);
-
+  const { newPersonalHandle, addNewPersonal } = useContext(MainContext);
+  const [isVehicleEnabled, setIsVehicleEnabled] = useState("display:none");
   const { Option } = Select;
-  const setVehicleFunc = (vehicles) => {
-    fetch("https://localhost:44368/Vehicle/" + vehicles, {
-      "Access-Control-Allow-Origin": "*",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setVehicle(data);
-      });
-    setVehiclePos(true);
+  const checkIfVehicle = (e) => {
+    // console.log();
+    // if (e.includes("Firmenwagen")) {
+    //   setIsVehicleEnabled("display:block");
+    // } else {
+    //   setIsVehicleEnabled("display:none");
+    // }
   };
-  useEffect(() => {
-    fetch("https://localhost:44368/Vehicle", {
-      "Access-Control-Allow-Origin": "*",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setVehicleListState(data);
-      });
-  }, []);
-
   // const addNewWorker = () => {
   //   setIsInsertSucceded(true);
   //   if (vehiclePos == false) {
@@ -104,21 +83,21 @@ const AddWorkerPage = (props) => {
             <Input
               bordered={false}
               placeholder="Name"
-              onChange={(e) => setnameState(e.target.value)}
+              onChange={(e) => newPersonalHandle("name", e.target.value)}
             />
           </FormInputContainer>
           <FormInputContainer headerText={"Vorname"}>
             <Input
               bordered={false}
               placeholder="Vorname"
-              onChange={(e) => setVornameState(e.target.value)}
+              onChange={(e) => newPersonalHandle("surname", e.target.value)}
             />
           </FormInputContainer>
           <FormInputContainer headerText={"Strasse"}>
             <Input
               bordered={false}
               placeholder="Strasse"
-              onChange={(e) => setVornameState(e.target.value)}
+              onChange={(e) => newPersonalHandle("address", e.target.value)}
             />
           </FormInputContainer>
           <FormInputContainer headerText={"PLZ"}>
@@ -126,14 +105,14 @@ const AddWorkerPage = (props) => {
               type={"number"}
               bordered={false}
               placeholder="PLZ"
-              onChange={(e) => setVornameState(e.target.value)}
+              onChange={(e) => newPersonalHandle("postalCode", e.target.value)}
             />
           </FormInputContainer>
           <FormInputContainer headerText={"Wohnort"}>
             <Input
               bordered={false}
               placeholder="Wohnort"
-              onChange={(e) => setVornameState(e.target.value)}
+              onChange={(e) => newPersonalHandle("city", e.target.value)}
             />
           </FormInputContainer>
         </div>
@@ -146,7 +125,7 @@ const AddWorkerPage = (props) => {
                   defaultValue="L"
                   bordered={false}
                   style={{ width: "100%" }}
-                  onChange={(e) => setHasVehicle(e)}
+                  onChange={(e) => newPersonalHandle("clothSize", e)}
                 >
                   <Option value="XS">XS</Option>
                   <Option value="S">S</Option>
@@ -163,7 +142,7 @@ const AddWorkerPage = (props) => {
                   defaultValue="42"
                   style={{ width: 300 }}
                   bordered={false}
-                  onChange={(e) => setHasVehicle(e)}
+                  onChange={(e) => newPersonalHandle("shoeSize", e)}
                 >
                   <Option value="36">36</Option>
                   <Option value="36.5">36.5</Option>
@@ -199,6 +178,7 @@ const AddWorkerPage = (props) => {
                   style={{ width: "100%" }}
                   bordered={false}
                   placeholder="Schulabluss"
+                  onChange={(e) => newPersonalHandle("education", e)}
                 >
                   <Option value="Hauptschule">Hauptschule</Option>
                   <Option value="Realschule">Realschule</Option>
@@ -211,7 +191,7 @@ const AddWorkerPage = (props) => {
                   defaultValue="Z1"
                   bordered={false}
                   style={{ width: "100%" }}
-                  onChange={(e) => setHasVehicle(e)}
+                  onChange={(e) => newPersonalHandle("languageCertificate", e)}
                 >
                   <Option value="Z1">Z1</Option>
                   <Option value="Z2">Z2</Option>
@@ -252,6 +232,7 @@ const AddWorkerPage = (props) => {
                   style={{ width: "100%" }}
                   bordered={false}
                   placeholder="Führerschein"
+                  onChange={(e) => newPersonalHandle("driverLicense", e)}
                 >
                   <Option value="Klasse A">Klasse A</Option>
                   <Option value="Klasse B">Klasse B</Option>
@@ -264,7 +245,10 @@ const AddWorkerPage = (props) => {
             <h5>Inventar</h5>
             <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
               <FormInputContainer headerText={"Inventar"}>
-                <Checkbox.Group style={{ width: "100%" }}>
+                <Checkbox.Group
+                  style={{ width: "100%" }}
+                  onChange={(e) => newPersonalHandle("inventory", e)}
+                >
                   <Row>
                     <Col span={8}>
                       <Checkbox value="Laptop">Laptop</Checkbox>
@@ -278,8 +262,24 @@ const AddWorkerPage = (props) => {
                   </Col>
                 </Checkbox.Group>
               </FormInputContainer>
+              {/* <FormInputContainer
+                styles={{ display: "none" }}
+                headerText={"Zertifikate"}
+              >
+                <Select
+                  defaultValue="vehic1"
+                  bordered={false}
+                  style={{ width: "100%" }}
+                  onChange={(e) => newPersonalHandle("languageCertificate", e)}
+                >
+                  <Option value="Z1">vehic1</Option>
+                  <Option value="Z2">Z2</Option>
+                  <Option value="Z3">Z3</Option>
+                  <Option value="Z4">Z4</Option>
+                </Select>
+              </FormInputContainer> */}
               <Space style={{ width: 220 }}>
-                <Button type="primary" loading={isInsertSucceded}>
+                <Button type="primary" onClick={addNewPersonal} loading={false}>
                   ADD
                 </Button>
               </Space>

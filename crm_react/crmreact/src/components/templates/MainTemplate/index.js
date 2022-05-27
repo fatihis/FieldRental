@@ -17,11 +17,15 @@ import { AiOutlineHome, AiOutlineMenu } from "react-icons/ai";
 import { FiUsers } from "react-icons/fi";
 import { RiUserSearchLine, RiUser3Line, RiUserAddLine } from "react-icons/ri";
 import { Breadcrumb } from "antd";
-
+import car from "../../../assets/car.png";
+import carPlus from "../../../assets/car-plus.png";
+import carDetail from "../../../assets/car-manufacturing.png";
+import { MainContextProvider } from "../../../api/MainContext";
 const MainTemplate = (props) => {
   const [collapseMenu, setCollapseMenu] = useState(false);
+
   return (
-    <div className="main-wrapper">
+    <div className="main-wrapper max-h-screen">
       <ProSidebar collapsed={collapseMenu}>
         <SidebarHeader>
           <div className="d-flex justify-content-between align-items-center">
@@ -52,21 +56,42 @@ const MainTemplate = (props) => {
         </SidebarHeader>
         <SidebarContent>
           <Menu popperArrow={true} iconShape="square">
-            <MenuItem icon={<AiOutlineHome size={30} />}>
+            <MenuItem icon={<AiOutlineHome color="white" size={30} />}>
               Übersicht
               <Link to="/" />
             </MenuItem>
-            <SubMenu icon={<FiUsers size={30} />} title="Personal">
-              <MenuItem icon={<RiUser3Line size={30} />}>
+            <SubMenu
+              icon={<FiUsers color="white" size={30} />}
+              title="Personal"
+            >
+              <MenuItem icon={<RiUser3Line color="white" size={30} />}>
                 <Link to="/personal" />
                 Personal
               </MenuItem>
-              <MenuItem icon={<RiUserAddLine size={30} />}>
+              <MenuItem icon={<RiUserAddLine color="white" size={30} />}>
                 <Link to="/personal-anlegen" />
                 Benutzer Anlegen
               </MenuItem>
-              <MenuItem icon={<RiUserSearchLine size={30} />}>
+              <MenuItem icon={<RiUserSearchLine color="white" size={30} />}>
                 Benutzerverwaltung
+              </MenuItem>
+            </SubMenu>
+            <SubMenu
+              icon={<img className="menu-icon" src={car}></img>}
+              title="Fuhrpark"
+            >
+              <MenuItem icon={<img className="menu-icon" src={car}></img>}>
+                <Link to="/fuhrpark" />
+                Fuhrpark
+              </MenuItem>
+              <MenuItem icon={<img className="menu-icon" src={carPlus}></img>}>
+                <Link to="/fahrzeug-anlegen" />
+                Fahrzeug Anlegen
+              </MenuItem>
+              <MenuItem
+                icon={<img className="menu-icon" src={carDetail}></img>}
+              >
+                Fahrzeug bearbeiten
               </MenuItem>
             </SubMenu>
           </Menu>
@@ -75,7 +100,7 @@ const MainTemplate = (props) => {
           <p> Copyright buraya gelebilir belkis</p>
         </SidebarFooter>
       </ProSidebar>
-      <div className="d-flex flex-column w-100">
+      <div className="d-flex flex-column w-100 max-h-screen">
         <h3 className="mt-4 mx-lg-5 fw-bold">Personal List</h3>
         <div className="breadcrumb-container mx-5">
           <Breadcrumb separator=">">
@@ -85,7 +110,9 @@ const MainTemplate = (props) => {
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>
-        <Outlet />
+        <MainContextProvider>
+          <Outlet />
+        </MainContextProvider>
       </div>
     </div>
   );

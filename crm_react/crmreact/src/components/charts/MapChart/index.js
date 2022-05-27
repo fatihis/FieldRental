@@ -8,22 +8,23 @@ import { notification } from "antd";
 import { geoEqualEarth, geoPath } from "https://cdn.skypack.dev/d3-geo@3";
 const MapChart = (props) => {
   const divRef = useRef();
-  $(".map-chart").empty();
+
   useEffect(() => {
-    var width = 560,
-      height = 250,
+    $(".map-chart").empty();
+    var width = 760,
+      height = 450,
       focused = null,
       geoPath;
     var svg = d3
       .select(".map-chart")
       .append("svg")
-      .attr("viewBox", "0 0 550 260")
+      .attr("viewBox", "0 0 660 450")
       .attr("preserveAspectRatio", "xMinYMin meet");
 
     svg
       .append("rect")
       .attr("class", "background")
-      .attr("viewBox", "0 0 550 260")
+      .attr("viewBox", "0 0 660 450")
       .attr("preserveAspectRatio", "xMinYMin meet");
 
     var g = svg.append("g").append("g").attr("id", "states");
