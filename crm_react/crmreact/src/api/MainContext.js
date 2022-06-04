@@ -1,4 +1,8 @@
+import ObjectID from "bson-objectid";
+import { json } from "d3";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { vehicleBrands } from "./manifacturerList";
 
 export const MainContext = React.createContext();
 
@@ -7,6 +11,12 @@ export const MainContextProvider = ({ children }) => {
   const [vehicleList, setVehicleList] = useState([]);
   const [selectedPersonal, setSelectedPersonal] = useState({});
   const [personalForTableData, setPersonalForTableData] = useState([]);
+  const [vehicleForTableData, setVehicleForTableData] = useState([]);
+  const [pageName, setPageName] = useState("");
+  const [parentPageName, setParentPageName] = useState("Übersicht");
+  const [singlePersonal, setSinglePersonal] = useState();
+  const [manifacturers, setManifacturers] = useState();
+
   const [newPersonal, setNewPersonal] = useState({
     name: "",
     surname: "",
@@ -18,17 +28,56 @@ export const MainContextProvider = ({ children }) => {
     shoeSize: "",
     education: [],
     languageCertificate: [],
-    driverLicense: [],
+    driverLisence: [],
     inventory: [],
-    vehicleId: 0,
+    vehicleId: "0",
+  });
+  const [newVehicle, setNewVehicle] = useState({
+    price: 0,
+    plateNumber: "",
+    manifacturer: "",
+    model: "",
+    year: 0,
+    priceCurrency: "",
+    inquiryType: "",
+    timeBegin: "",
+    timeEnd: "",
+    monthlyPrice: 0,
+    lastPay: 0,
+    TUVdate: "",
+    lastInspection: "",
+    nextInspection: "",
+    tires: "",
+    kilometers: 0,
   });
 
   // useEffect(() => {
   //   console.log(newPersonal);
   // }, [newPersonal]);
+  const getSinglePersonal = async (id) => {
+    await fetch("http://localhost:8080/personal/get/" + id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setSinglePersonal(result);
 
+        return result;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+
+        return false;
+      });
+
+    return false;
+  };
   const newPersonalHandle = (field, value) => {
     setNewPersonal({ ...newPersonal, [field]: value });
+  };
+  const newVehicleHandle = (field, value) => {
+    debugger;
+    setNewVehicle({ ...newVehicle, [field]: value });
   };
   const addNewPersonal = () => {
     fetch("http://localhost:8080/personal/create", {
@@ -46,33 +95,31 @@ export const MainContextProvider = ({ children }) => {
         console.error("Error:", error);
       });
   };
-
-  const getPersonalForTableData = () => {
-    const isListExist = getPersonalList();
-    var personalTableArray = [];
-    if (isListExist) {
-      personalList.forEach((personal, key) => {
-        personalTableArray.push({
-          key: key,
-          name: personal.name,
-          driverLisence: personal.driverLisence,
-          address: personal.address,
-          inventory: personal.inventory,
-        });
+  const addNewVehicle = () => {
+    debugger;
+    fetch("http://localhost:8080/vehicle/create", {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newVehicle),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-      setPersonalForTableData(personalTableArray);
-      return true;
-    }
-    return false;
   };
-  const getPersonalList = async () => {
-    fetch("http://localhost:8080/personal", {
+  const getVehicleList = () => {
+    fetch("http://localhost:8080/vehicle", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
         console.log("Success:", result);
-        setPersonalList(result);
+        setVehicleList(result);
         return true;
       })
       .catch((error) => {
@@ -80,18 +127,166 @@ export const MainContextProvider = ({ children }) => {
         return false;
       });
   };
+  const getPersonalForTableData = () => {
+    fetch("http://localhost:8080/personal", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        var personalTableArray = [];
+        result.forEach((personal, key) => {
+          personalTableArray.push({
+            id: personal._id,
+            key: key,
+            name: personal.name + " " + personal.surname,
+            driverLisence: personal.driverLisence,
+            address: personal.address,
+            inventory: personal.inventory,
+          });
+        });
+        setPersonalForTableData(personalTableArray);
+        return true;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return false;
+      });
+
+    return false;
+  };
+  const getVehicleForTableData = () => {
+    fetch("http://localhost:8080/vehicle", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        debugger;
+        console.log("Success:", result);
+        var vehicleTableArray = [];
+        result.forEach((vehicle, key) => {
+          vehicleTableArray.push({
+            key: key,
+            plateNumber: vehicle.plateNumber,
+            model: vehicle.model,
+            id: vehicle._id,
+            price:
+              vehicle.price + (vehicle.priceCurrency == "euro" ? "€" : "$"),
+            inquiryType: vehicle.inquiryType,
+            tires: vehicle.tires,
+            kilometers: vehicle.kilometers,
+          });
+        });
+        setVehicleForTableData(vehicleTableArray);
+        return true;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return false;
+      });
+
+    return false;
+  };
+
+  const updatePersonal = (id, set) => {
+    console.log(set, "s", id);
+    fetch("http://localhost:8080/personal/update/" + id, {
+      method: "PUT", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(set),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  const removePersonal = (id) => {
+    fetch("http://localhost:8080/personal/delete/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  const getPersonalList = async () => {};
+
+  const getManufacturerList = () => {
+    var newResults = [];
+    vehicleBrands.map((element) => {
+      if (
+        !newResults.includes(element.name) &&
+        element.Mfr_CommonName != null
+      ) {
+        newResults.push({ element: element.name });
+      }
+    });
+    setManifacturers(newResults);
+
+    // fetch(
+    //   "  https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json",
+    //   {
+    //     method: "GET",
+    //   }
+    // )
+    //   .then((response) => response.json())
+    //   .then((result) => {
+    //     console.log(result);
+    //     debugger;
+    //     var newResults = [];
+    //     result.Results.map((element) => {
+    //       if (
+    //         !newResults.includes(element.Mfr_CommonName) &&
+    //         element.Mfr_CommonName != null
+    //       ) {
+    //         newResults.push({ element: element.Mfr_CommonName });
+    //       }
+    //     });
+    //     setManifacturers(newResults);
+    //     return true;
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //     return false;
+    //   });
+
+    // return false;
+  };
   const contextValue = {
     personalList,
     vehicleList,
     selectedPersonal,
     personalForTableData,
+    vehicleForTableData,
+    singlePersonal,
+    manifacturers,
+    addNewVehicle,
+    getVehicleForTableData,
     setPersonalList,
+    getVehicleList,
     setVehicleList,
     setSelectedPersonal,
     getPersonalList,
     getPersonalForTableData,
     newPersonalHandle,
     addNewPersonal,
+    newVehicleHandle,
+    setPageName,
+    setParentPageName,
+    updatePersonal,
+    getSinglePersonal,
+    getManufacturerList,
+    removePersonal,
   };
 
   return (

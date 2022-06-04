@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import "./index.css";
 import { Link, Outlet } from "react-router-dom";
@@ -16,13 +16,20 @@ import "./index.scss";
 import { AiOutlineHome, AiOutlineMenu } from "react-icons/ai";
 import { FiUsers } from "react-icons/fi";
 import { RiUserSearchLine, RiUser3Line, RiUserAddLine } from "react-icons/ri";
+import { IoLogOutOutline, IoSettingsSharp } from "react-icons/io5";
 import { Breadcrumb } from "antd";
 import car from "../../../assets/car.png";
 import carPlus from "../../../assets/car-plus.png";
 import carDetail from "../../../assets/car-manufacturing.png";
+import userPhoto from "../../../assets/bill.jpg";
 import { MainContextProvider } from "../../../api/MainContext";
 const MainTemplate = (props) => {
   const [collapseMenu, setCollapseMenu] = useState(false);
+  const [pageName, setPageName] = useState("Übersicht");
+  const [parentPageName, setParentPageName] = useState("Übersicht");
+  const [picturesState, setPictures] = useState("Übersicht");
+
+  // const mainContext = useContext(mainContext);
 
   return (
     <div className="main-wrapper max-h-screen">
@@ -56,63 +63,128 @@ const MainTemplate = (props) => {
         </SidebarHeader>
         <SidebarContent>
           <Menu popperArrow={true} iconShape="square">
-            <MenuItem icon={<AiOutlineHome color="white" size={30} />}>
-              Übersicht
-              <Link to="/" />
-            </MenuItem>
+            <button
+              onClick={() => {
+                setPageName("Übersicht");
+                setParentPageName("Übersicht");
+              }}
+            >
+              <MenuItem icon={<AiOutlineHome color="white" size={30} />}>
+                Übersicht
+                <Link to="/" />
+              </MenuItem>
+            </button>
+
             <SubMenu
               icon={<FiUsers color="white" size={30} />}
               title="Personal"
             >
-              <MenuItem icon={<RiUser3Line color="white" size={30} />}>
-                <Link to="/personal" />
-                Personal
-              </MenuItem>
-              <MenuItem icon={<RiUserAddLine color="white" size={30} />}>
-                <Link to="/personal-anlegen" />
-                Benutzer Anlegen
-              </MenuItem>
-              <MenuItem icon={<RiUserSearchLine color="white" size={30} />}>
-                Benutzerverwaltung
-              </MenuItem>
+              <button
+                onClick={() => {
+                  setPageName("Personal");
+                  setParentPageName("Personal");
+                }}
+              >
+                <MenuItem icon={<RiUser3Line color="white" size={30} />}>
+                  <Link to="/personal" />
+                  Personal
+                </MenuItem>
+              </button>
+              <button
+                onClick={() => {
+                  setPageName("Benutzer Anlegen");
+                  setParentPageName("Personal");
+                }}
+              >
+                <MenuItem icon={<RiUserAddLine color="white" size={30} />}>
+                  <Link to="/personal-anlegen" />
+                  Benutzer Anlegen
+                </MenuItem>
+              </button>
+              <button
+                onClick={() => {
+                  setPageName("Benutzerverwaltung");
+                  setParentPageName("Personal");
+                }}
+              >
+                <MenuItem icon={<RiUserSearchLine color="white" size={30} />}>
+                  {" "}
+                  Benutzerverwaltung
+                </MenuItem>
+              </button>
             </SubMenu>
             <SubMenu
               icon={<img className="menu-icon" src={car}></img>}
               title="Fuhrpark"
             >
-              <MenuItem icon={<img className="menu-icon" src={car}></img>}>
-                <Link to="/fuhrpark" />
-                Fuhrpark
-              </MenuItem>
-              <MenuItem icon={<img className="menu-icon" src={carPlus}></img>}>
-                <Link to="/fahrzeug-anlegen" />
-                Fahrzeug Anlegen
-              </MenuItem>
-              <MenuItem
-                icon={<img className="menu-icon" src={carDetail}></img>}
+              <button
+                onClick={() => {
+                  setPageName("Fuhrpark");
+                  setParentPageName("Fuhrpark");
+                }}
               >
-                Fahrzeug bearbeiten
-              </MenuItem>
+                <MenuItem icon={<img className="menu-icon" src={car}></img>}>
+                  <Link to="/fuhrpark" />
+                  Fuhrpark
+                </MenuItem>
+              </button>
+              <button
+                onClick={() => {
+                  setPageName("Fahrzeug Anlegen");
+                  setParentPageName("Fuhrpark");
+                }}
+              >
+                <MenuItem
+                  icon={<img className="menu-icon" src={carPlus}></img>}
+                >
+                  <Link to="/fahrzeug-anlegen" />
+                  Fahrzeug Anlegen
+                </MenuItem>
+              </button>
+              <button
+                onClick={() => {
+                  setPageName("Fahrzeug bearbeiten");
+                  setParentPageName("Fuhrpark");
+                }}
+              >
+                <MenuItem
+                  icon={<img className="menu-icon" src={carDetail}></img>}
+                >
+                  <Link to="/fahrzeug-berarbeiten"></Link>
+                  Fahrzeug bearbeiten
+                </MenuItem>
+              </button>
             </SubMenu>
           </Menu>
         </SidebarContent>
         <SidebarFooter>
-          <p> Copyright buraya gelebilir belkis</p>
+          <p> Copyright </p>
         </SidebarFooter>
       </ProSidebar>
       <div className="d-flex flex-column w-100 max-h-screen">
-        <h3 className="mt-4 mx-lg-5 fw-bold">Personal List</h3>
-        <div className="breadcrumb-container mx-5">
-          <Breadcrumb separator=">">
-            <Breadcrumb.Item>Personal</Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <a href="/personal">Personal List</a>
-            </Breadcrumb.Item>
-          </Breadcrumb>
+        <div className="d-flex flex-row justify-content-between">
+          <div className="d-flex flex-column">
+            <h3 className="mt-4 mx-lg-5 fw-bold">{pageName}</h3>
+            <div className="breadcrumb-container mx-5">
+              <Breadcrumb separator=">">
+                <Breadcrumb.Item>{parentPageName}</Breadcrumb.Item>
+                {pageName != parentPageName ? (
+                  <Breadcrumb.Item>
+                    <a href="/personal">{pageName}</a>
+                  </Breadcrumb.Item>
+                ) : (
+                  ""
+                )}
+              </Breadcrumb>
+            </div>
+          </div>
+          <div className="d-flex align-items-center justify-center mt-3 mr-5 gap-2">
+            <img className="user-photo" src={userPhoto}></img>
+            <IoSettingsSharp size={30} />
+            <IoLogOutOutline size={30} />
+          </div>
         </div>
-        <MainContextProvider>
-          <Outlet />
-        </MainContextProvider>
+        <Outlet />
       </div>
     </div>
   );

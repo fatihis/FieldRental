@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./index.css";
 import { Tag, Space } from "antd";
@@ -7,129 +7,99 @@ import upArrow from "../../assets/up-arrow.png";
 import downArrow from "../../assets/arrow-down.png";
 import DonutChart from "../../components/charts/DonutChart";
 import MapChart from "../../components/charts/MapChart";
+import { MainContext } from "../../api/MainContext";
+import plateImg from "../../assets/plate.png";
+import { useState } from "react";
 const VehicleMain = (props) => {
+  const mainContext = useContext(MainContext);
+  const [data, setData] = useState();
+
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Kennzeichen",
+      dataIndex: "plateNumber",
+      key: "plateNumber",
+      render: (text) => {
+        return (
+          <div className="plateRender">
+            <img src={plateImg} className="h-7 w-auto"></img>{" "}
+            <span className="position-absolute top-5 left-9 h-2">{text}</span>
+          </div>
+        );
+      },
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Model",
+      dataIndex: "model",
+      key: "model",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (tags) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: "Kaufwert",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Anschaffungsart",
+      dataIndex: "inquiryType",
+      key: "inquiryType",
+    },
+    {
+      title: "Bereifung",
+      key: "tires",
+      dataIndex: "tires",
+      render: (tag) => {
+        var color =
+          tag == "Winter" ? "#91d5ff" : tag == "Sommer" ? "#ffc069" : "#13c2c2";
+        return (
+          <Tag color={color} key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Kilometers",
+      key: "kilometers",
+      dataIndex: "kilometers",
     },
     {
       title: "Action",
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>Delete</a>
+          <a>EDIT</a>
         </Space>
       ),
     },
   ];
+  useEffect(() => {
+    mainContext.getVehicleForTableData();
+  }, []);
+  useEffect(() => {
+    setData(mainContext.vehicleForTableData);
+  }, [mainContext.vehicleForTableData]);
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "4",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "5",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "6",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "7",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "8",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "9",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
   return (
     <div className="page-wrapper d-flex align-items-center justify-content-center flex-column position-relative">
       <div className="table-card mb-4 p-3">
-        <AntdTable columns={columns} data={data} />
+        {data ? (
+          <AntdTable columns={columns} data={data} itemsOnAPage={4} />
+        ) : (
+          ""
+        )}
       </div>
       <h3 className="w-100 detail-main-header fw-bold">Statistiken</h3>
       <div className="bottom-detail-wrapper d-flex flex-row align-items-center justify-content-between ">
-        <div className="detail-card mt-5  d-flex flex-column p-5">
-          <h2 className="detail-card-header fw-bold">ARBEITSKRÄFTE</h2>
+        <div className="detail-card mt-5  d-flex flex-column px-5 pt-4">
+          <h2 className="detail-card-header fw-bold">
+            Fahrzeugbelegungsquoten
+          </h2>
           <div className="detail-text w-100 d-flex flex-row">
             <h3 className="fw-bold mt-2">215</h3>
             <div className="d-flex flex-column">
@@ -152,11 +122,12 @@ const VehicleMain = (props) => {
             </div>
           </div>
         </div>
-        <div className="detail-card mt-5  d-flex flex-column p-5">
+        <div className="detail-card mt-5  d-flex flex-column px-5 pt-4">
           <h2 className="detail-card-header fw-bold">ARBEITSKRÄFTE</h2>
-          <div className="detail-chart-wrapper d-flex w-100 h-100">
+          <div className="detail-chart-wrapper d-flex w-100 h-100 mt-2">
             <div className="detail-chart-container w-100 h-100 ">
               <DonutChart
+                barColor={"#98ff66"}
                 chartId={"progressOne"}
                 chartTitle={"SLA RATING"}
                 value={21}
@@ -164,6 +135,7 @@ const VehicleMain = (props) => {
             </div>
             <div className="detail-chart-container w-100 h-100 ">
               <DonutChart
+                barColor={"#6698ff"}
                 chartId={"progressTwo"}
                 chartTitle={"PBI Satisfaction"}
                 value={76}

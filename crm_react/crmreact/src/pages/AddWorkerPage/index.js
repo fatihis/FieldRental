@@ -5,9 +5,13 @@ import { PoweroffOutlined } from "@ant-design/icons";
 import "./index.css";
 import FormInputContainer from "../../components/molecules/FormInputContainer";
 import { MainContext } from "../../api/MainContext";
+
 const AddWorkerPage = (props) => {
-  const { newPersonalHandle, addNewPersonal } = useContext(MainContext);
-  const [isVehicleEnabled, setIsVehicleEnabled] = useState("display:none");
+  const { newPersonalHandle, addNewPersonal, vehicleList, getVehicleList } =
+    useContext(MainContext);
+  const [isVehicleEnabled, setIsVehicleEnabled] = useState(false);
+  const [vehicleListLocal, setVehicleListLocal] = useState();
+  const [loadingState, setLoadingState] = useState(false);
   const { Option } = Select;
   const checkIfVehicle = (e) => {
     // console.log();
@@ -17,7 +21,18 @@ const AddWorkerPage = (props) => {
     //   setIsVehicleEnabled("display:none");
     // }
   };
+  useEffect(() => {
+    if (isVehicleEnabled == true) {
+      getVehicleList();
+    }
+  }, [isVehicleEnabled]);
+
+  useEffect(() => {
+    setVehicleListLocal(vehicleList);
+  }, [vehicleList]);
+
   // const addNewWorker = () => {
+
   //   setIsInsertSucceded(true);
   //   if (vehiclePos == false) {
   //     var newWorkerData = {
@@ -71,6 +86,16 @@ const AddWorkerPage = (props) => {
   //       console.error("Error:", error);
   //     });
   // };
+  const handleSubmitLoading = () => {
+    setLoadingState(true);
+    setTimeout(() => {
+      setLoadingState(false);
+    }, 2000);
+    setTimeout(() => {
+      debugger;
+      window.location.reload();
+    }, 2500);
+  };
   return (
     <div className="  mt-20 p-10  d-flex  flex-column align-items-center justify-content-center ">
       <h2 className=" fw-bold  text-left self-center font-semibold">
@@ -188,6 +213,7 @@ const AddWorkerPage = (props) => {
               </FormInputContainer>
               <FormInputContainer headerText={"Zertifikate"}>
                 <Select
+                  mode="multiple"
                   defaultValue="Z1"
                   bordered={false}
                   style={{ width: "100%" }}
@@ -203,23 +229,23 @@ const AddWorkerPage = (props) => {
           </div>
 
           {/* {vehicleListState != undefined ? (
-            <Select
-              placeholder="Select a Vehicle"
-              style={{ width: 220 }}
-              onChange={(e) => setVehicleFunc(e)}
-            >
-              {vehicleListState.map((element) => {
-                return (
-                  <Option
-                    disabled={element.isAssigned == true ? true : false}
-                    value={element.id}
-                  >
-                    {element.id + " : " + element.modelType}
-                  </Option>
-                );
-              })}
-            </Select>
-          ) : null} */}
+              <Select
+                placeholder="Select a Vehicle"
+                style={{ width: 220 }}
+                onChange={(e) => setVehicleFunc(e)}
+              >
+                {vehicleListState.map((element) => {
+                  return (
+                    <Option
+                      disabled={element.isAssigned == true ? true : false}
+                      value={element.id}
+                    >
+                      {element.id + " : " + element.modelType}
+                    </Option>
+                  );
+                })}
+              </Select>
+            ) : null} */}
         </div>
         <div className="form-column f-column-3  d-flex flex-column align-items-start justify-content-center">
           <div>
@@ -232,7 +258,7 @@ const AddWorkerPage = (props) => {
                   style={{ width: "100%" }}
                   bordered={false}
                   placeholder="Führerschein"
-                  onChange={(e) => newPersonalHandle("driverLicense", e)}
+                  onChange={(e) => newPersonalHandle("driverLisence", e)}
                 >
                   <Option value="Klasse A">Klasse A</Option>
                   <Option value="Klasse B">Klasse B</Option>
@@ -243,11 +269,18 @@ const AddWorkerPage = (props) => {
               </FormInputContainer>
             </div>
             <h5>Inventar</h5>
-            <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
+            <div className="form-column f-column-1 mb-5  d-flex flex-column align-items-start justify-content-center">
               <FormInputContainer headerText={"Inventar"}>
                 <Checkbox.Group
                   style={{ width: "100%" }}
-                  onChange={(e) => newPersonalHandle("inventory", e)}
+                  onChange={(e) => {
+                    newPersonalHandle("inventory", e);
+                    if (e.includes("Firmenwagen")) {
+                      setIsVehicleEnabled(true);
+                    } else {
+                      setIsVehicleEnabled(false);
+                    }
+                  }}
                 >
                   <Row>
                     <Col span={8}>
@@ -262,28 +295,55 @@ const AddWorkerPage = (props) => {
                   </Col>
                 </Checkbox.Group>
               </FormInputContainer>
-              {/* <FormInputContainer
-                styles={{ display: "none" }}
-                headerText={"Zertifikate"}
-              >
+              {isVehicleEnabled && vehicleListLocal != undefined ? (
                 <Select
-                  defaultValue="vehic1"
-                  bordered={false}
-                  style={{ width: "100%" }}
-                  onChange={(e) => newPersonalHandle("languageCertificate", e)}
+                  placeholder="Select a Vehicle"
+                  style={{ width: 320 }}
+                  onChange={(e) => newPersonalHandle("vehicleId", e)}
                 >
-                  <Option value="Z1">vehic1</Option>
-                  <Option value="Z2">Z2</Option>
-                  <Option value="Z3">Z3</Option>
-                  <Option value="Z4">Z4</Option>
+                  {vehicleListLocal.map((element) => {
+                    return (
+                      <Option
+                        disabled={element.isAssigned === true ? true : false}
+                        value={element._id}
+                      >
+                        {element._id}
+                      </Option>
+                    );
+                  })}
                 </Select>
-              </FormInputContainer> */}
-              <Space style={{ width: 220 }}>
-                <Button type="primary" onClick={addNewPersonal} loading={false}>
-                  ADD
-                </Button>
-              </Space>
+              ) : (
+                ""
+              )}
+              {/* <FormInputContainer
+                  styles={{ display: "none" }}
+                  headerText={"Zertifikate"}
+                >
+                  <Select
+                    defaultValue="vehic1"
+                    bordered={false}
+                    style={{ width: "100%" }}
+                    onChange={(e) => newPersonalHandle("languageCertificate", e)}
+                  >
+                    <Option value="Z1">vehic1</Option>
+                    <Option value="Z2">Z2</Option>
+                    <Option value="Z3">Z3</Option>
+                    <Option value="Z4">Z4</Option>
+                  </Select>
+                </FormInputContainer> */}
             </div>
+            <Space style={{ width: 220 }}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  addNewPersonal();
+                  handleSubmitLoading();
+                }}
+                loading={loadingState}
+              >
+                ADD
+              </Button>
+            </Space>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
 import $ from "jquery";
@@ -7,6 +7,20 @@ const DonutChart = ({ value, chartTitle, chartId, barColor }) => {
   const divRef = useRef();
   var width = 270;
   var height = 180;
+  const [val, setVal] = useState(value);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    if (seconds % 5 === 0) {
+      setVal(Math.floor(Math.random() * (100 - 1 + 1)) + 1);
+    }
+  }, [seconds]);
 
   useEffect(() => {
     $("." + chartId).empty();
@@ -22,7 +36,7 @@ const DonutChart = ({ value, chartTitle, chartId, barColor }) => {
     var valueText = svg
       .append("text")
       .attr("x", -10)
-      .text(value + "%");
+      .text(val + "%");
 
     svg.append("g").attr("class", "slices");
     svg.append("g").attr("class", "labels");
@@ -33,7 +47,7 @@ const DonutChart = ({ value, chartTitle, chartId, barColor }) => {
     var color = d3
       .scaleOrdinal()
       .range(["#EFEFF9", (barColor = !"" ? barColor : "#4C62F5")]);
-    var data = [100 - value, value];
+    var data = [100 - val, val];
 
     var pie = d3
       .pie()
@@ -64,7 +78,7 @@ const DonutChart = ({ value, chartTitle, chartId, barColor }) => {
     function midAngle(d) {
       return d.startAngle + (d.endAngle - d.startAngle) / 2;
     }
-  }, []);
+  }, [val]);
 
   return (
     <div className="donut-container">

@@ -11,24 +11,31 @@ import PersonalMain from "./pages/PersonalMain";
 import AddWorkerPage from "./pages/AddWorkerPage";
 import AddVehicle from "./pages/AddVehicle";
 import VehicleMain from "./pages/VehicleMain";
+import VehicleDetails from "./pages/VehicleDetails";
+import { MainContextProvider } from "./api/MainContext";
+import LoginScreen from "./pages/Login";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainTemplate />}>
-          <Route index element={<Home />} />
-          <Route path="personal" element={<PersonalMain />} />
-          <Route path="personal-anlegen" element={<AddWorkerPage />} />
-          <Route path="fuhrpark" element={<VehicleMain />} />
-          <Route path="fahrzeug-anlegen" element={<AddVehicle />} />
-          {/* <Route path="blogs" element={<Blogs />} />
+    <MainContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="login" element={<LoginScreen />} />
+          <Route path="/" element={<MainTemplate />}>
+            <Route index element={<Home />} />
+            <Route path="personal" element={<PersonalMain />} />
+            <Route path="personal-anlegen" element={<AddWorkerPage />} />
+            <Route path="fuhrpark" element={<VehicleMain />} />
+            <Route path="fahrzeug-anlegen" element={<AddVehicle />} />
+            <Route path="benutzerverwaltung/:id" element={<VehicleDetails />} />
+            {/* <Route path="blogs" element={<Blogs />} />
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} /> */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </MainContextProvider>
   </React.StrictMode>
 );
 

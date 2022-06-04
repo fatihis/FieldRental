@@ -7,6 +7,7 @@ import upArrow from "../../assets/up-arrow.png";
 import downArrow from "../../assets/arrow-down.png";
 import DonutChart from "../../components/charts/DonutChart";
 import { MainContext } from "../../api/MainContext";
+import { Link } from "react-router-dom";
 const PersonalMain = (props) => {
   const mainContext = useContext(MainContext);
   const [data, setData] = useState();
@@ -66,10 +67,10 @@ const PersonalMain = (props) => {
     },
     {
       title: "Action",
-      key: "action",
-      render: (text, record) => (
+      key: "id",
+      render: (_, record) => (
         <Space size="middle">
-          <a>EDIT</a>
+          <Link to={"/benutzerverwaltung/" + record.id}>Edit</Link>
         </Space>
       ),
     },
@@ -79,6 +80,7 @@ const PersonalMain = (props) => {
   }, []);
   useEffect(() => {
     setData(mainContext.personalForTableData);
+    console.log(mainContext.personalForTableData);
   }, [mainContext.personalForTableData]);
 
   // const data = [
@@ -149,11 +151,15 @@ const PersonalMain = (props) => {
   return (
     <div className="page-wrapper d-flex align-items-center justify-content-center flex-column position-relative">
       <div className="table-card mb-4 p-3">
-        {data ? <AntdTable columns={columns} data={data} /> : ""}
+        {data ? (
+          <AntdTable columns={columns} data={data} itemsOnAPage={4} />
+        ) : (
+          ""
+        )}
       </div>
       <h3 className="w-100 detail-main-header fw-bold">Statistiken</h3>
       <div className="bottom-detail-wrapper d-flex flex-row align-items-center justify-content-between ">
-        <div className="detail-card mt-5  d-flex flex-column p-5">
+        <div className="detail-card mt-5  d-flex flex-column px-5 pt-4">
           <h2 className="detail-card-header fw-bold">ARBEITSKRÄFTE</h2>
           <div className="detail-text w-100 d-flex flex-row">
             <h3 className="fw-bold mt-2">215</h3>
@@ -177,14 +183,15 @@ const PersonalMain = (props) => {
             </div>
           </div>
         </div>
-        <div className="detail-card mt-5  d-flex flex-column p-5">
+        <div className="detail-card mt-5  d-flex flex-column px-5 pt-4">
           <h2 className="detail-card-header fw-bold">ARBEITSKRÄFTE</h2>
-          <div className="detail-chart-wrapper d-flex w-100 h-100">
+          <div className="detail-chart-wrapper d-flex w-100 h-100 mt-2">
             <div className="detail-chart-container w-100 h-100 ">
               <DonutChart
                 chartId={"progressOne"}
                 chartTitle={"SLA RATING"}
                 value={21}
+                barColor={"#ffff66"}
               />
             </div>
             <div className="detail-chart-container w-100 h-100 ">
@@ -192,6 +199,7 @@ const PersonalMain = (props) => {
                 chartId={"progressTwo"}
                 chartTitle={"PBI Satisfaction"}
                 value={76}
+                barColor={"#6698ff"}
               />
             </div>
           </div>

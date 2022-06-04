@@ -20,9 +20,9 @@
 .detail-chart-containers {
   border: 1px solid transparent;
   border-radius: 20px;
-  -webkit-box-shadow: -1px -2px 26px 1px rgba(61, 61, 61, 0.521);
-  -moz-box-shadow: -1px -2px 26px 1px rgba(61, 61, 61, 0.521);
-  box-shadow: -1px -2px 26px 1px rgba(61, 61, 61, 0.521);
+  -webkit-box-shadow: -1px -2px 26px 1px rgba(61, 61, 61, 0.199);
+  -moz-box-shadow: -1px -2px 26px 1px rgba(61, 61, 61, 0.199);
+  box-shadow: -1px -2px 26px 1px rgba(61, 61, 61, 0.199);
 }
 
 .vl {

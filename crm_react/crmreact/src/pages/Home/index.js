@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import DashboardCard from "../../components/molecules/DashboardCard";
 import { GrUserWorker, GrAlert, GrAnalytics } from "react-icons/gr";
@@ -9,7 +9,16 @@ import { Tag, Space } from "antd";
 
 import "./index.css";
 import SortableBarChart from "../../components/charts/SortableBarChart";
+import { MainContext } from "../../api/MainContext";
 const Home = (props) => {
+  const { setParentPageName, setPageName, getManufacturerList } =
+    useContext(MainContext);
+  useEffect(() => {
+    setParentPageName("Übersicht");
+    setPageName("");
+    getManufacturerList();
+  }, []);
+
   const columns = [
     {
       title: "Name",
