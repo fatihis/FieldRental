@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 
 import MainTemplate from "./components/templates/MainTemplate";
 import Home from "./pages/Home";

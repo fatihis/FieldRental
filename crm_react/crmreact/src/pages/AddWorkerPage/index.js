@@ -22,14 +22,6 @@ const AddWorkerPage = (props) => {
   const { Option } = Select;
   let navigate = useNavigate();
 
-  const checkIfVehicle = (e) => {
-    // console.log();
-    // if (e.includes("Firmenwagen")) {
-    //   setIsVehicleEnabled("display:block");
-    // } else {
-    //   setIsVehicleEnabled("display:none");
-    // }
-  };
   useEffect(() => {
     setParentPageName("Personal");
     setPageName("Benutzer Anlegen");
