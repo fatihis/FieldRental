@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
+import { MainContext } from "../../api/MainContext";
 const LoginScreen = (props) => {
+  const [username, setUsername] = useState("");
+  const [pass, setPass] = useState("");
+  const mainContext = useContext(MainContext);
+
+  let navigate = useNavigate();
+
+  function handleSubmit() {
+    if (username == "1" && pass == "1") {
+      mainContext.setUserLogin(true);
+      navigate("/", { replace: true });
+    } else {
+      alert("Anmeldeinformationen sind falsch");
+    }
+  }
   return (
     <div className="container-login">
       <div class="circle"></div>
@@ -15,7 +31,13 @@ const LoginScreen = (props) => {
         </p>
         <div class="form__container">
           <div class="form__group">
-            <input type="text" id="user" class="form__input" placeholder=" " />
+            <input
+              onChange={(e) => setUsername(e.target.value)}
+              type="text"
+              id="user"
+              class="form__input"
+              placeholder=" "
+            />
             <label for="user" class="form__label">
               Nutzername:
             </label>
@@ -27,13 +49,19 @@ const LoginScreen = (props) => {
               id="password"
               class="form__input"
               placeholder=" "
+              onChange={(e) => setPass(e.target.value)}
             />
-            <label for="password" class="form__label">
+            <label htmlFor="password" class="form__label">
               Passwort:
             </label>
             <span class="form__line"></span>
           </div>
-          <input type="submit" class="form__submit" value="Eintreten" />
+          <input
+            onClick={() => handleSubmit()}
+            type="submit"
+            class="form__submit"
+            value="Eintreten"
+          />
         </div>
       </form>
     </div>

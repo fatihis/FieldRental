@@ -76,6 +76,8 @@ const PersonalMain = (props) => {
     },
   ];
   useEffect(() => {
+    mainContext.setPageName("Personal");
+    mainContext.setParentPageName("Personal");
     mainContext.getPersonalForTableData();
   }, []);
   useEffect(() => {

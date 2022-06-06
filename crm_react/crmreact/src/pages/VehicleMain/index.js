@@ -10,6 +10,7 @@ import MapChart from "../../components/charts/MapChart";
 import { MainContext } from "../../api/MainContext";
 import plateImg from "../../assets/plate.png";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 const VehicleMain = (props) => {
   const mainContext = useContext(MainContext);
   const [data, setData] = useState();
@@ -29,7 +30,9 @@ const VehicleMain = (props) => {
         return (
           <div className="plateRender">
             <img src={plateImg} className="h-7 w-auto"></img>{" "}
-            <span className="position-absolute top-5 left-9 h-2">{text}</span>
+            <span className="position-absolute top-5 left-7 h-2 fw-bold">
+              {text}
+            </span>
           </div>
         );
       },
@@ -70,10 +73,10 @@ const VehicleMain = (props) => {
     },
     {
       title: "Action",
-      key: "action",
-      render: (text, record) => (
+      key: "id",
+      render: (_, record) => (
         <Space size="middle">
-          <a>EDIT</a>
+          <Link to={"/fahrzeug-berarbeiten/" + record.id}>Edit</Link>
         </Space>
       ),
     },
@@ -83,6 +86,8 @@ const VehicleMain = (props) => {
   }, []);
   useEffect(() => {
     setData(mainContext.vehicleForTableData);
+    mainContext.setParentPageName("Fuhrpark");
+    mainContext.setPageName("Fuhrpark");
   }, [mainContext.vehicleForTableData]);
 
   return (

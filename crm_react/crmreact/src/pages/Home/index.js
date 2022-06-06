@@ -15,7 +15,7 @@ const Home = (props) => {
     useContext(MainContext);
   useEffect(() => {
     setParentPageName("Übersicht");
-    setPageName("");
+    setPageName("Übersicht");
     getManufacturerList();
   }, []);
 

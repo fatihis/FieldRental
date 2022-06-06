@@ -14,6 +14,7 @@ import VehicleMain from "./pages/VehicleMain";
 import VehicleDetails from "./pages/VehicleDetails";
 import { MainContextProvider } from "./api/MainContext";
 import LoginScreen from "./pages/Login";
+import VehicleEdit from "./pages/VehicleEdit";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -29,6 +30,7 @@ root.render(
             <Route path="fuhrpark" element={<VehicleMain />} />
             <Route path="fahrzeug-anlegen" element={<AddVehicle />} />
             <Route path="benutzerverwaltung/:id" element={<VehicleDetails />} />
+            <Route path="fahrzeug-berarbeiten/:id" element={<VehicleEdit />} />
             {/* <Route path="blogs" element={<Blogs />} />
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} /> */}

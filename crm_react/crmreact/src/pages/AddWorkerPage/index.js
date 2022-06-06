@@ -5,14 +5,23 @@ import { PoweroffOutlined } from "@ant-design/icons";
 import "./index.css";
 import FormInputContainer from "../../components/molecules/FormInputContainer";
 import { MainContext } from "../../api/MainContext";
+import { useNavigate } from "react-router-dom";
 
 const AddWorkerPage = (props) => {
-  const { newPersonalHandle, addNewPersonal, vehicleList, getVehicleList } =
-    useContext(MainContext);
+  const {
+    setParentPageName,
+    setPageName,
+    newPersonalHandle,
+    addNewPersonal,
+    vehicleList,
+    getVehicleList,
+  } = useContext(MainContext);
   const [isVehicleEnabled, setIsVehicleEnabled] = useState(false);
   const [vehicleListLocal, setVehicleListLocal] = useState();
   const [loadingState, setLoadingState] = useState(false);
   const { Option } = Select;
+  let navigate = useNavigate();
+
   const checkIfVehicle = (e) => {
     // console.log();
     // if (e.includes("Firmenwagen")) {
@@ -21,6 +30,11 @@ const AddWorkerPage = (props) => {
     //   setIsVehicleEnabled("display:none");
     // }
   };
+  useEffect(() => {
+    setParentPageName("Personal");
+    setPageName("Benutzer Anlegen");
+  }, []);
+
   useEffect(() => {
     if (isVehicleEnabled == true) {
       getVehicleList();
@@ -92,8 +106,7 @@ const AddWorkerPage = (props) => {
       setLoadingState(false);
     }, 2000);
     setTimeout(() => {
-      debugger;
-      window.location.reload();
+      navigate("/personal");
     }, 2500);
   };
   return (

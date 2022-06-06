@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { MainContext } from "../../api/MainContext";
 import { Input, Select, Button, Space, Checkbox, Row, Col } from "antd";
-
+import workerIll1 from "../../assets/worker1-removebg-preview.png";
+import workerIll2 from "../../assets/worker2-removebg-preview.png";
+import workerIll3 from "../../assets/worker3-removebg-preview.png";
+import workerIll4 from "../../assets/worker4-removebg-preview.png";
+import workerIll5 from "../../assets/worker5-removebg-preview.png";
 import EditInputContainer from "../../components/molecules/EditInputContainer";
 import { useParams, useNavigate } from "react-router-dom";
 import "./index.css";
@@ -13,6 +17,7 @@ const VehicleDetails = (props) => {
   const [buttonName, setButtonName] = useState("EDIT");
   const [changedAttributes, setChangedAttributes] = useState();
   const [buttonUsed, setButtonUsed] = useState(false);
+  const [bgImage, setBgImage] = useState(workerIll1);
   const {
     updatePersonal,
     getSinglePersonal,
@@ -34,11 +39,15 @@ const VehicleDetails = (props) => {
     setButtonName(buttonName == "EDIT" ? "SAVE" : "EDIT");
   };
   useEffect(() => {
+    var images = [workerIll1, workerIll2, workerIll3, workerIll4, workerIll5];
+    setBgImage(images[Math.floor(Math.random() * images.length)]);
+  }, []);
+
+  useEffect(() => {
     navigate("../benutzerverwaltung/" + id, { replace: true });
   }, [buttonUsed]);
 
   useEffect(() => {
-    debugger;
     const personal = getSinglePersonal(id);
     console.log(personal, "got");
     setParentPageName("Personal");
@@ -46,8 +55,8 @@ const VehicleDetails = (props) => {
   }, []);
   useEffect(() => {
     setChoosen(singlePersonal);
-    debugger;
     console.log(singlePersonal);
+    debugger;
   }, [singlePersonal]);
 
   const [choosen, setChoosen] = useState({
@@ -76,7 +85,10 @@ const VehicleDetails = (props) => {
     setChangedAttributes(updateElement);
   };
   return (
-    <div className="w-100 h-100 px-10 py-10 ">
+    <div className="w-100 h-100 px-10 py-10 position-relative">
+      <div className="bg-image position-absolute top-0 right-96">
+        <img src={bgImage}></img>{" "}
+      </div>
       <div className="d-flex ">
         <div className=" w-52 h-52 p-5 bg-slate-100 flex align-items-center justify-center">
           photos belki

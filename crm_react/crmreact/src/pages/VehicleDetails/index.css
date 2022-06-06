@@ -9,3 +9,7 @@
   box-shadow: 0px 0px 47px -4px rgba(0, 0, 0, 0.75);
   max-height: 580px;
 }
+
+.bg-image {
+  z-index: -1;
+}

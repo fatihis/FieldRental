@@ -15,7 +15,9 @@ export const MainContextProvider = ({ children }) => {
   const [pageName, setPageName] = useState("");
   const [parentPageName, setParentPageName] = useState("Übersicht");
   const [singlePersonal, setSinglePersonal] = useState();
+  const [singleVehicle, setSingleVehicle] = useState();
   const [manifacturers, setManifacturers] = useState();
+  const [userLogin, setUserLogin] = useState(false);
 
   const [newPersonal, setNewPersonal] = useState({
     name: "",
@@ -62,6 +64,23 @@ export const MainContextProvider = ({ children }) => {
       .then((result) => {
         setSinglePersonal(result);
 
+        return result;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+
+        return false;
+      });
+
+    return false;
+  };
+  const getSingleVehicle = async (id) => {
+    await fetch("http://localhost:8080/vehicle/get/" + id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setSingleVehicle(result);
         return result;
       })
       .catch((error) => {
@@ -204,8 +223,40 @@ export const MainContextProvider = ({ children }) => {
         console.error("Error:", error);
       });
   };
+  const updateVehicle = (id, set) => {
+    console.log(set, "s", id);
+    fetch("http://localhost:8080/vehicle/update/" + id, {
+      method: "PUT", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(set),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
   const removePersonal = (id) => {
     fetch("http://localhost:8080/personal/delete/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  const removeVehicle = (id) => {
+    fetch("http://localhost:8080/vehicle/delete/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -270,6 +321,11 @@ export const MainContextProvider = ({ children }) => {
     vehicleForTableData,
     singlePersonal,
     manifacturers,
+    parentPageName,
+    pageName,
+    singleVehicle,
+    userLogin,
+    setUserLogin,
     addNewVehicle,
     getVehicleForTableData,
     setPersonalList,
@@ -287,6 +343,9 @@ export const MainContextProvider = ({ children }) => {
     getSinglePersonal,
     getManufacturerList,
     removePersonal,
+    getSingleVehicle,
+    updateVehicle,
+    removeVehicle,
   };
 
   return (

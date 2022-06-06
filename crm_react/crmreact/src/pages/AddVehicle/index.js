@@ -22,12 +22,14 @@ import { MainContext } from "../../api/MainContext";
 const AddVehicle = (props) => {
   const [isInsertSucceded, setIsInsertSucceded] = useState(false);
   const [currency, setCurrency] = useState("euro");
-  const [manifacturerListLocal, setManifacturerListLocal] = useState();
+  const [manifacturerListLocal, setManifacturerListLocal] = useState([]);
   const {
     newVehicleHandle,
     addNewVehicle,
     getManufacturerList,
     manifacturers,
+    setParentPageName,
+    setPageName,
   } = useContext(MainContext);
   const { Option } = Select;
 
@@ -75,6 +77,8 @@ const AddVehicle = (props) => {
     );
   };
   useEffect(() => {
+    setPageName("Fahrzeug Anlegen");
+    setParentPageName("Fuhrpark");
     getManufacturerList();
   }, []);
 
@@ -146,6 +150,27 @@ const AddVehicle = (props) => {
                 />
               </FormInputContainer>
             </div>
+            <h5>Raten</h5>
+            <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
+              <FormInputContainer headerText={"Monatliche Rate"}>
+                <Input
+                  bordered={false}
+                  placeholder="Monatliche Rate"
+                  type={"number"}
+                  onChange={(e) =>
+                    newVehicleHandle("monthlyPrice", e.target.value)
+                  }
+                />
+              </FormInputContainer>
+              <FormInputContainer headerText={"Schlussrate"}>
+                <Input
+                  bordered={false}
+                  placeholder="Schlussrate"
+                  type={"number"}
+                  onChange={(e) => newVehicleHandle("lastPay", e.target.value)}
+                />
+              </FormInputContainer>
+            </div>
           </div>
         </div>
         <div className="form-column f-column-2 d-flex flex-column align-items-start justify-content-center">
@@ -171,7 +196,7 @@ const AddVehicle = (props) => {
               ></Input>
             </FormInputContainer>
 
-            {manifacturerListLocal != undefined ? (
+            {/* {manifacturerListLocal != undefined ? (
               <FormInputContainer headerText={"Marke"}>
                 <AutoComplete
                   options={manifacturerListLocal}
@@ -183,7 +208,7 @@ const AddVehicle = (props) => {
               </FormInputContainer>
             ) : (
               ""
-            )}
+            )} */}
             <FormInputContainer headerText={"Model"}>
               <Input
                 bordered={false}
@@ -199,29 +224,31 @@ const AddVehicle = (props) => {
                 onChange={(e) => newVehicleHandle("year", e.target.value)}
               />
             </FormInputContainer>
-            <h5>Raten</h5>
-            <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
-              <FormInputContainer headerText={"Monatliche Rate"}>
-                <Input
-                  bordered={false}
-                  placeholder="Monatliche Rate"
-                  type={"number"}
-                  onChange={(e) =>
-                    newVehicleHandle("monthlyPrice", e.target.value)
-                  }
-                />
-              </FormInputContainer>
-              <FormInputContainer headerText={"Schlussrate"}>
-                <Input
-                  bordered={false}
-                  placeholder="Schlussrate"
-                  type={"number"}
-                  onChange={(e) => newVehicleHandle("lastPay", e.target.value)}
-                />
-              </FormInputContainer>
-            </div>
           </div>
+          <h5>TÜV</h5>
 
+          <FormInputContainer headerText={"Restwert"}>
+            <DatePicker
+              placeholder="Datum auswählen"
+              style={{ width: "100%" }}
+              picker="month"
+              onChange={(e, dateString) =>
+                newVehicleHandle("TUVdate", dateString)
+              }
+            />
+          </FormInputContainer>
+          <hr class="rounded-separator"></hr>
+
+          <div>
+            <FormInputContainer headerText={"Kilometerstand"}>
+              <Input
+                bordered={false}
+                placeholder="Kilometerstand"
+                type={"number"}
+                onChange={(e) => newVehicleHandle("kilometers", e.target.value)}
+              />
+            </FormInputContainer>
+          </div>
           {/* {vehicleListState != undefined ? (
             <Select
               placeholder="Select a Vehicle"
@@ -243,18 +270,6 @@ const AddVehicle = (props) => {
         </div>
         <div className="form-column f-column-3  d-flex flex-column align-items-start justify-content-center">
           <div>
-            <h5>TÜV</h5>
-
-            <FormInputContainer headerText={"Restwert"}>
-              <DatePicker
-                placeholder="Datum auswählen"
-                style={{ width: "100%" }}
-                picker="month"
-                onChange={(e, dateString) =>
-                  newVehicleHandle("TUVdate", dateString)
-                }
-              />
-            </FormInputContainer>
             <div>
               <h5>Inspektion</h5>
               <FormInputContainer headerText={"letzte Inspektion"}>
@@ -292,20 +307,7 @@ const AddVehicle = (props) => {
                 </Select>
               </FormInputContainer>
             </div>
-            <hr class="rounded-separator"></hr>
 
-            <div>
-              <FormInputContainer headerText={"Kilometerstand"}>
-                <Input
-                  bordered={false}
-                  placeholder="Kilometerstand"
-                  type={"number"}
-                  onChange={(e) =>
-                    newVehicleHandle("kilometers", e.target.value)
-                  }
-                />
-              </FormInputContainer>
-            </div>
             <Space style={{ width: 220 }}>
               <Button
                 onClick={addNewVehicle}
