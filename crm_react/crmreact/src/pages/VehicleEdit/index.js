@@ -20,14 +20,17 @@ import "./index.css";
 import EditInputContainer from "../../components/molecules/EditInputContainer";
 import { useParams, useNavigate } from "react-router-dom";
 import "./index.css";
+import Loader from "../../components/atoms/Loader";
 const VehicleEdit = (props) => {
   const mainContext = useContext(MainContext);
   const { Option } = Select;
   const [isEditable, setisEditable] = useState(true);
   const [buttonName, setButtonName] = useState("EDIT");
-  const [changedAttributes, setChangedAttributes] = useState();
+  const [changedAttributes, setChangedAttributes] = useState([]);
   const [buttonUsed, setButtonUsed] = useState(false);
   const [currency, setCurrency] = useState("euro");
+  const [isShown, setIsShown] = useState(false);
+  const waitBeforeShow = 1000;
   const {
     updateVehicle,
     getSingleVehicle,
@@ -57,6 +60,11 @@ const VehicleEdit = (props) => {
     setPageName("Fuhrpark");
     setParentPageName("Fahrzeug Berarbeiten");
   }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsShown(true);
+    }, waitBeforeShow);
+  }, [waitBeforeShow]);
 
   const [choosen, setChoosen] = useState({
     price: 0,
@@ -77,8 +85,6 @@ const VehicleEdit = (props) => {
     kilometers: 0,
   });
   useEffect(() => {
-    console.log(singleVehicle);
-
     setChoosen(singleVehicle);
     // setCurrency(choosen.priceCurrency);
   }, [singleVehicle]);
@@ -87,7 +93,12 @@ const VehicleEdit = (props) => {
     var updateElement = {
       [field]: value,
     };
-    setChangedAttributes(updateElement);
+
+    var filteredAttr = changedAttributes.filter(function (obj) {
+      return !obj.hasOwnProperty(field);
+    });
+    var tempArray = [...filteredAttr, updateElement];
+    setChangedAttributes(tempArray);
   };
   const euroDollarDropdown = (
     <Menu
@@ -123,7 +134,7 @@ const VehicleEdit = (props) => {
       ]}
     />
   );
-  return (
+  return isShown ? (
     <div className="w-100 h-100 px-10 py-10 ">
       <div className="d-flex ">
         <div className=" w-52 h-52 p-5 bg-slate-100 flex align-items-center justify-center">
@@ -146,7 +157,7 @@ const VehicleEdit = (props) => {
                 removeVehicle(id);
                 setButtonUsed(true);
                 setTimeout(() => {
-                  window.location.reload();
+                  navigate("/fuhrpark");
                 }, 2000);
               }}
               loading={false}
@@ -166,10 +177,10 @@ const VehicleEdit = (props) => {
             <div className="field-container w-100 h-28 flex flex-col">
               <EditInputContainer headerText={""}>
                 <Select
-                  value={choosen.inquiryType}
+                  defaultValue={choosen.inquiryType}
                   bordered={false}
                   disabled={isEditable}
-                  style={{ width: "100%" }}
+                  style={{ width: "330px" }}
                   onChange={(e) => updateVehicleHandle("inquiryType", e)}
                 >
                   <Option value="geleast">Geleast</Option>
@@ -182,7 +193,7 @@ const VehicleEdit = (props) => {
               <EditInputContainer headerText={"Kaufwert"}>
                 <div className="d-flex ">
                   <Input
-                    value={choosen.price}
+                    defaultValue={choosen.price}
                     bordered={false}
                     disabled={isEditable}
                     placeholder="Kaufwert"
@@ -230,7 +241,7 @@ const VehicleEdit = (props) => {
                 <Input
                   bordered={false}
                   placeholder="Monatliche Rate"
-                  value={choosen.monthlyPrice}
+                  defaultValue={choosen.monthlyPrice}
                   disabled={isEditable}
                   type={"number"}
                   onChange={(e) =>
@@ -244,7 +255,7 @@ const VehicleEdit = (props) => {
                   placeholder="Schlussrate"
                   disabled={isEditable}
                   type={"number"}
-                  value={choosen.lastPay}
+                  defaultValue={choosen.lastPay}
                   onChange={(e) =>
                     updateVehicleHandle("lastPay", e.target.value)
                   }
@@ -257,7 +268,7 @@ const VehicleEdit = (props) => {
               <Input
                 disabled={isEditable}
                 bordered={false}
-                value={choosen.plateNumber}
+                defaultValue={choosen.plateNumber}
                 onChange={(e) =>
                   updateVehicleHandle("plateNumber", e.target.value)
                 }
@@ -270,7 +281,7 @@ const VehicleEdit = (props) => {
                 disabled={isEditable}
                 bordered={false}
                 style={{ width: "100%" }}
-                value={choosen.manifacturer}
+                defaultValue={choosen.manifacturer}
                 onChange={(e) =>
                   updateVehicleHandle("manifacturer", e.target.value)
                 }
@@ -282,7 +293,7 @@ const VehicleEdit = (props) => {
                   bordered={false}
                   disabled={isEditable}
                   placeholder="Model"
-                  value={choosen.model}
+                  defaultValue={choosen.model}
                   onChange={(e) => updateVehicleHandle("model", e.target.value)}
                 />
               </EditInputContainer>
@@ -291,7 +302,7 @@ const VehicleEdit = (props) => {
                   bordered={false}
                   disabled={isEditable}
                   placeholder="Jahr"
-                  value={choosen.year}
+                  defaultValue={choosen.year}
                   type={"number"}
                   onChange={(e) => updateVehicleHandle("year", e.target.value)}
                 />
@@ -319,7 +330,7 @@ const VehicleEdit = (props) => {
                   disabled={isEditable}
                   placeholder="Kilometerstand"
                   type={"number"}
-                  value={choosen.kilometers}
+                  defaultValue={choosen.kilometers}
                   onChange={(e) =>
                     updateVehicleHandle("kilometers", e.target.value)
                   }
@@ -351,9 +362,8 @@ const VehicleEdit = (props) => {
             <div>
               <EditInputContainer headerText={"Bereifung"}>
                 <Select
-                  value={choosen.tires}
+                  defaultValue={choosen.tires}
                   disabled={isEditable}
-                  defaultValue="Allwetter"
                   style={{ width: 300 }}
                   bordered={false}
                   onChange={(e) => updateVehicleHandle("tires", e)}
@@ -387,6 +397,10 @@ const VehicleEdit = (props) => {
       ) : (
         <div>no data found</div>
       )}
+    </div>
+  ) : (
+    <div className="w-100 h-100 d-flex align-items-center justify-content-center loaderdiv">
+      <Loader />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import dummmy from "./dummy.json";
 import "./index.css";
 import { notification } from "antd";
 import { geoEqualEarth, geoPath } from "https://cdn.skypack.dev/d3-geo@3";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 const MapChart = (props) => {
   const divRef = useRef();
 
@@ -103,78 +104,70 @@ const MapChart = (props) => {
       .style("fill", function (d) {
         return myColor(d);
       })
-      .on("click", (d) => clickText(d))
+      // .on("click", clickPath)
+      .on("click", (_, d) => clickText(d))
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseout", mouseleave);
 
-    // function clickPath(d) {
-    //   var x = width / 2,
-    //     y = height / 2,
-    //     k = 1,
-    //     name = d.properties.NAME_1;
+    function clickPath(d) {
+      var x = width / 2,
+        y = height / 2,
+        k = 1,
+        name = d.properties.NAME_1;
 
-    //   g.selectAll("text").remove();
-    //   if (focused === null || !(focused === d)) {
-    //     var centroid = geoPath.centroid(d),
-    //       x = +centroid[0],
-    //       y = +centroid[1],
-    //       k = 1.75;
-    //     focused = d;
+      g.selectAll("text").remove();
+      if (focused === null || !(focused === d)) {
+        var centroid = geoPath.centroid(d),
+          x = +centroid[0],
+          y = +centroid[1],
+          k = 1.75;
+        focused = d;
 
-    //     g.append("text")
-    //       .text(name)
-    //       .attr("x", x)
-    //       .attr("y", y)
-    //       .style("text-anchor", "middle")
-    //       .style("font-size", "8px")
-    //       .style("stroke-width", "0px")
-    //       .style("fill", "black")
-    //       .style("font-family", "Times New Roman")
-    //       .on("click", clickText);
-    //   } else {
-    //     focused = null;
-    //   }
+        g.append("text")
+          .text(name)
+          .attr("x", x)
+          .attr("y", y)
+          .style("text-anchor", "middle")
+          .style("font-size", "8px")
+          .style("stroke-width", "0px")
+          .style("fill", "black")
+          .style("font-family", "Times New Roman")
+          .on("click", clickText);
+      } else {
+        focused = null;
+      }
 
-    //   g.selectAll("path").classed(
-    //     "active",
-    //     focused &&
-    //       function (d) {
-    //         return d === focused;
-    //       }
-    //   );
+      g.selectAll("path").classed(
+        "active",
+        focused &&
+          function (d) {
+            return d === focused;
+          }
+      );
 
-    //   g.transition()
-    //     .duration(1000)
-    //     .attr(
-    //       "transform",
-    //       "translate(" +
-    //         width / 2 +
-    //         "," +
-    //         height / 2 +
-    //         ")scale(" +
-    //         k +
-    //         ")translate(" +
-    //         -x +
-    //         "," +
-    //         -y +
-    //         ")"
-    //     )
-    //     .style("stroke-width", 1.75 / k + "px");
-    // }
+      g.transition()
+        .duration(1000)
+        .attr(
+          "transform",
+          "translate(" +
+            width / 2 +
+            "," +
+            height / 2 +
+            ")scale(" +
+            k +
+            ")translate(" +
+            -x +
+            "," +
+            -y +
+            ")"
+        )
+        .style("stroke-width", 1.75 / k + "px");
+    }
 
     function clickText(d) {
-      var cities = [
-        "Berlin",
-        "Baden-Württemberg",
-        "Bavaria",
-        "Bremen",
-        "Hamburg",
-        "Saxony",
-        "Hesse",
-      ];
       const args = {
-        message: cities[Math.floor(Math.random() * cities.length)],
+        message: d.properties.NAME_1,
         description: "Active Issues:" + Math.floor(Math.random() * 22),
         duration: 2,
       };

@@ -66,7 +66,6 @@ const MainTemplate = (props) => {
             <Menu popperArrow={true} iconShape="square">
               <button
                 onClick={() => {
-                  console.log(mainContext.parentPageName);
                   setPageName("Übersicht");
                   setParentPageName("Übersicht");
                 }}
@@ -110,7 +109,7 @@ const MainTemplate = (props) => {
                   }}
                 >
                   <MenuItem icon={<RiUserSearchLine color="white" size={30} />}>
-                    {" "}
+                    <Link to="/benutzerverwaltung" />
                     Benutzerverwaltung
                   </MenuItem>
                 </button>

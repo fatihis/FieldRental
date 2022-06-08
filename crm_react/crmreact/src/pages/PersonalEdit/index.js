@@ -10,14 +10,17 @@ import workerIll5 from "../../assets/worker5-removebg-preview.png";
 import EditInputContainer from "../../components/molecules/EditInputContainer";
 import { useParams, useNavigate } from "react-router-dom";
 import "./index.css";
-const VehicleDetails = (props) => {
+import Loader from "../../components/atoms/Loader";
+const PersonalEdit = (props) => {
   const mainContext = useContext(MainContext);
   const { Option } = Select;
   const [isEditable, setisEditable] = useState(true);
   const [buttonName, setButtonName] = useState("EDIT");
-  const [changedAttributes, setChangedAttributes] = useState();
+  const [changedAttributes, setChangedAttributes] = useState([]);
   const [buttonUsed, setButtonUsed] = useState(false);
   const [bgImage, setBgImage] = useState(workerIll1);
+  const [isShown, setIsShown] = useState(false);
+  const waitBeforeShow = 1000;
   const {
     updatePersonal,
     getSinglePersonal,
@@ -26,6 +29,7 @@ const VehicleDetails = (props) => {
     setPageName,
     vehicleList,
     removePersonal,
+    getVehicleList,
   } = useContext(MainContext);
   let { id } = useParams();
   let navigate = useNavigate();
@@ -49,15 +53,21 @@ const VehicleDetails = (props) => {
 
   useEffect(() => {
     const personal = getSinglePersonal(id);
-    console.log(personal, "got");
+    getVehicleList();
     setParentPageName("Personal");
     setPageName("Benutzerverwaltung");
   }, []);
   useEffect(() => {
     setChoosen(singlePersonal);
-    console.log(singlePersonal);
-    debugger;
+    return () => {
+      setChoosen(undefined);
+    };
   }, [singlePersonal]);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsShown(true);
+    }, waitBeforeShow);
+  }, [waitBeforeShow]);
 
   const [choosen, setChoosen] = useState({
     name: "",
@@ -77,14 +87,20 @@ const VehicleDetails = (props) => {
   const [vehicleListLocal, setVehicleListLocal] = useState();
   useEffect(() => {
     setVehicleListLocal(vehicleList);
+    debugger;
   }, [vehicleList]);
   const updatePersonalHandle = (field, value) => {
     var updateElement = {
       [field]: value,
     };
-    setChangedAttributes(updateElement);
+
+    var filteredAttr = changedAttributes.filter(function (obj) {
+      return !obj.hasOwnProperty(field);
+    });
+    var tempArray = [...filteredAttr, updateElement];
+    setChangedAttributes(tempArray);
   };
-  return (
+  return isShown ? (
     <div className="w-100 h-100 px-10 py-10 position-relative">
       <div className="bg-image position-absolute top-0 right-96">
         <img src={bgImage}></img>{" "}
@@ -110,7 +126,7 @@ const VehicleDetails = (props) => {
                 removePersonal(id);
                 setButtonUsed(true);
                 setTimeout(() => {
-                  window.location.reload();
+                  navigate("/personal");
                 }, 2000);
               }}
               loading={false}
@@ -124,7 +140,7 @@ const VehicleDetails = (props) => {
           <a href="#issues">Anmerkungen</a>
         </div>
       </div>
-      {choosen != undefined ? (
+      {choosen != undefined && choosen.name.length > 0 ? (
         <div className="container-ro rounded-sm w-100 h-100  flex bg-slate-200  ">
           <div className="field-wrapper flex-1 w-100 h-100 p-10">
             <div className="field-container w-100 h-28 flex flex-col">
@@ -371,6 +387,10 @@ const VehicleDetails = (props) => {
         <div>no data found</div>
       )}
     </div>
+  ) : (
+    <div className="w-100 h-100 d-flex align-items-center justify-content-center loaderdiv">
+      <Loader />
+    </div>
   );
 };
 // const [newVehicle, setNewVehicle] = useState({
@@ -387,6 +407,6 @@ const VehicleDetails = (props) => {
 //   tires: "",
 //   kilometers: 0,
 // });
-VehicleDetails.propTypes = {};
+PersonalEdit.propTypes = {};
 
-export default VehicleDetails;
+export default PersonalEdit;

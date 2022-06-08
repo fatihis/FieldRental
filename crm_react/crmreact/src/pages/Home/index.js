@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import DashboardCard from "../../components/molecules/DashboardCard";
 import { GrUserWorker, GrAlert, GrAnalytics } from "react-icons/gr";
@@ -10,14 +10,33 @@ import { Tag, Space } from "antd";
 import "./index.css";
 import SortableBarChart from "../../components/charts/SortableBarChart";
 import { MainContext } from "../../api/MainContext";
+import { Link } from "react-router-dom";
 const Home = (props) => {
-  const { setParentPageName, setPageName, getManufacturerList } =
-    useContext(MainContext);
+  const [data, setData] = useState();
+  const [localPersonalCount, setLocalPersonalCount] = useState(0);
+  const {
+    setParentPageName,
+    personalCount,
+    setPageName,
+    getManufacturerList,
+    getPersonalForTableData,
+    getPersonalCount,
+  } = useContext(MainContext);
   useEffect(() => {
     setParentPageName("Übersicht");
     setPageName("Übersicht");
     getManufacturerList();
+    getPersonalCount();
+    getPersonalForTableData();
   }, []);
+
+  useEffect(() => {
+    setLocalPersonalCount(personalCount);
+  }, [personalCount]);
+
+  const mainContext = useContext(MainContext);
+
+  const colors = ["#ac92eb", "#4fc1e8", "#a0d568", "#ffce54", "#ed5564"];
 
   const columns = [
     {
@@ -27,9 +46,21 @@ const Home = (props) => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Driver License",
+      dataIndex: "driverLisence",
+      key: "driverLisence",
+      render: (tags) => (
+        <>
+          {tags.map((tag, idx) => {
+            let color = colors[idx];
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: "Address",
@@ -37,15 +68,18 @@ const Home = (props) => {
       key: "address",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
+      title: "Inventory",
+      key: "inventory",
+      dataIndex: "inventory",
       render: (tags) => (
         <>
           {tags.map((tag) => {
             let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
+            if (tag === "Handy") {
               color = "volcano";
+            }
+            if (tag === "Laptop") {
+              color = "blue";
             }
             return (
               <Tag color={color} key={tag}>
@@ -58,80 +92,18 @@ const Home = (props) => {
     },
     {
       title: "Action",
-      key: "action",
-      render: (text, record) => (
+      key: "id",
+      render: (_, record) => (
         <Space size="middle">
-          <a>Delete</a>
+          <Link to={"/benutzerverwaltung/" + record.id}>Edit</Link>
         </Space>
       ),
     },
   ];
+  useEffect(() => {
+    setData(mainContext.personalForTableData);
+  }, [mainContext.personalForTableData]);
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "4",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "5",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "6",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "7",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "8",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "9",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
   return (
     <div className="homepage-wrapper flex flex-col ">
       <div className="home-left-side-top-left flex items-center px-5 gap-5 py-4 flex-1 w-auto h-full border-r-4 border-b-4">
@@ -139,7 +111,7 @@ const Home = (props) => {
           <DashboardCard
             cardImage={<GrUserWorker size={40} />}
             cardHeader={"Active Workers"}
-            cardText={"131"}
+            cardText={localPersonalCount}
             cardBg={"rgba(217,241,242)"}
           />
           <DashboardCard
@@ -159,7 +131,11 @@ const Home = (props) => {
           <MapChart />
         </div>
         <div className="flex-2 h-full">
-          <AntdTable itemsOnAPage={5} columns={columns} data={data} />
+          {data ? (
+            <AntdTable columns={columns} data={data} itemsOnAPage={3} />
+          ) : (
+            ""
+          )}
         </div>
       </div>
       <div className="h-100 w-100 d-flex gap-4 px-5 py-1">

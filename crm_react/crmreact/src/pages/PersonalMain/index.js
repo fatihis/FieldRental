@@ -82,7 +82,6 @@ const PersonalMain = (props) => {
   }, []);
   useEffect(() => {
     setData(mainContext.personalForTableData);
-    console.log(mainContext.personalForTableData);
   }, [mainContext.personalForTableData]);
 
   // const data = [

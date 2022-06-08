@@ -19,10 +19,14 @@ import "./index.css";
 import FormInputContainer from "../../components/molecules/FormInputContainer";
 import { useContext } from "react";
 import { MainContext } from "../../api/MainContext";
+import { useNavigate } from "react-router-dom";
 const AddVehicle = (props) => {
   const [isInsertSucceded, setIsInsertSucceded] = useState(false);
   const [currency, setCurrency] = useState("euro");
   const [manifacturerListLocal, setManifacturerListLocal] = useState([]);
+  const [loadingState, setLoadingState] = useState(false);
+  let navigate = useNavigate();
+
   const {
     newVehicleHandle,
     addNewVehicle,
@@ -81,7 +85,15 @@ const AddVehicle = (props) => {
     setParentPageName("Fuhrpark");
     getManufacturerList();
   }, []);
-
+  const handleSubmitLoading = () => {
+    setLoadingState(true);
+    setTimeout(() => {
+      setLoadingState(false);
+    }, 2000);
+    setTimeout(() => {
+      navigate("/fuhrpark");
+    }, 2500);
+  };
   return (
     <div className="  mt-20 p-10  d-flex  flex-column align-items-center justify-content-center ">
       <h2 className="  fw-bold  text-left self-center font-semibold">
@@ -179,6 +191,7 @@ const AddVehicle = (props) => {
             <FormInputContainer headerText={"Kennzeichen"}>
               <Input
                 bordered={false}
+                placeholder="Kennzeichen"
                 onChange={(e) =>
                   newVehicleHandle("plateNumber", e.target.value)
                 }
@@ -310,9 +323,12 @@ const AddVehicle = (props) => {
 
             <Space style={{ width: 220 }}>
               <Button
-                onClick={addNewVehicle}
+                onClick={() => {
+                  addNewVehicle();
+                  handleSubmitLoading();
+                }}
                 type="primary"
-                loading={isInsertSucceded}
+                loading={loadingState}
               >
                 ADD
               </Button>

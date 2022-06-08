@@ -11,10 +11,12 @@ import PersonalMain from "./pages/PersonalMain";
 import AddWorkerPage from "./pages/AddWorkerPage";
 import AddVehicle from "./pages/AddVehicle";
 import VehicleMain from "./pages/VehicleMain";
-import VehicleDetails from "./pages/VehicleDetails";
+import PersonalEdit from "./pages/PersonalEdit";
 import { MainContextProvider } from "./api/MainContext";
 import LoginScreen from "./pages/Login";
 import VehicleEdit from "./pages/VehicleEdit";
+import PersonalSearch from "./pages/PersonalSearch";
+import VehicleSearch from "./pages/VehicleSearch";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -29,8 +31,11 @@ root.render(
             <Route path="personal-anlegen" element={<AddWorkerPage />} />
             <Route path="fuhrpark" element={<VehicleMain />} />
             <Route path="fahrzeug-anlegen" element={<AddVehicle />} />
-            <Route path="benutzerverwaltung/:id" element={<VehicleDetails />} />
+            <Route path="benutzerverwaltung/:id" element={<PersonalEdit />} />
             <Route path="fahrzeug-berarbeiten/:id" element={<VehicleEdit />} />
+            <Route path="benutzerverwaltung" element={<PersonalSearch />} />
+            <Route path="fahrzeug-berarbeiten/" element={<VehicleSearch />} />
+
             {/* <Route path="blogs" element={<Blogs />} />
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} /> */}

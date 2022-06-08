@@ -14,6 +14,9 @@ import { Link } from "react-router-dom";
 const VehicleMain = (props) => {
   const mainContext = useContext(MainContext);
   const [data, setData] = useState();
+  const [localVehicleCount, setLocalVehicleCount] = useState(0);
+  const [localNonActiveVehicleCount, setLocalNonActiveVehicleCount] =
+    useState(0);
 
   const columns = [
     {
@@ -30,7 +33,7 @@ const VehicleMain = (props) => {
         return (
           <div className="plateRender">
             <img src={plateImg} className="h-7 w-auto"></img>{" "}
-            <span className="position-absolute top-5 left-7 h-2 fw-bold">
+            <span className="position-absolute top-5 left-9 h-2 fw-bold">
               {text}
             </span>
           </div>
@@ -83,7 +86,15 @@ const VehicleMain = (props) => {
   ];
   useEffect(() => {
     mainContext.getVehicleForTableData();
+    mainContext.getVehicleCount();
+    mainContext.getNonActiveVehicle();
   }, []);
+  useEffect(() => {
+    setLocalVehicleCount(mainContext.vehicleCount);
+  }, [mainContext.vehicleCount]);
+  useEffect(() => {
+    setLocalNonActiveVehicleCount(mainContext.nonActiveVehicleCount);
+  }, [mainContext.nonActiveVehicleCount]);
   useEffect(() => {
     setData(mainContext.vehicleForTableData);
     mainContext.setParentPageName("Fuhrpark");
@@ -106,24 +117,30 @@ const VehicleMain = (props) => {
             Fahrzeugbelegungsquoten
           </h2>
           <div className="detail-text w-100 d-flex flex-row">
-            <h3 className="fw-bold mt-2">215</h3>
+            <h3 className="fw-bold mt-2">{localVehicleCount}</h3>
             <div className="d-flex flex-column">
               <img className="arrow-icon" src={upArrow}></img>
-              <p className="mb-0">aktiver Arbeiter (192 im letzten Quartal)</p>
+              <p className="mb-0">
+                aktiver Arbeiter ({localVehicleCount} im letzten Quartal)
+              </p>
             </div>
           </div>
           <div className="detail-text w-100 d-flex flex-row">
-            <h3 className="fw-bold mt-2">15</h3>
+            <h3 className="fw-bold mt-2">{localNonActiveVehicleCount}</h3>
             <div className="d-flex flex-column">
               <img className="arrow-icon" src={downArrow}></img>
               <p className="mb-0">Zahl der Arbeitnehmer, die kündigen</p>
             </div>
           </div>
           <div className="detail-text w-100 d-flex flex-row">
-            <h3 className="fw-bold mt-2">16</h3>
+            <h3 className="fw-bold mt-2">
+              {localVehicleCount - localNonActiveVehicleCount}
+            </h3>
             <div className="d-flex flex-column">
               <img className="arrow-icon" src={downArrow}></img>
-              <p className="mb-0">(%) Mitarbeiterwachstumsrate</p>
+              <p className="mb-0">
+                (%) {localVehicleCount - localNonActiveVehicleCount}
+              </p>
             </div>
           </div>
         </div>

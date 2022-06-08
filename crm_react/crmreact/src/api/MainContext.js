@@ -8,6 +8,8 @@ export const MainContext = React.createContext();
 
 export const MainContextProvider = ({ children }) => {
   const [personalList, setPersonalList] = useState([]);
+  const [personalListAutoComplete, setPersonalListAutoComplete] = useState([]);
+  const [vehicleListAutoComplete, setVehicleListAutoComplete] = useState([]);
   const [vehicleList, setVehicleList] = useState([]);
   const [selectedPersonal, setSelectedPersonal] = useState({});
   const [personalForTableData, setPersonalForTableData] = useState([]);
@@ -17,7 +19,10 @@ export const MainContextProvider = ({ children }) => {
   const [singlePersonal, setSinglePersonal] = useState();
   const [singleVehicle, setSingleVehicle] = useState();
   const [manifacturers, setManifacturers] = useState();
+  const [personalCount, setPersonalCount] = useState();
   const [userLogin, setUserLogin] = useState(false);
+  const [vehicleCount, setVehicleCount] = useState();
+  const [nonActiveVehicleCount, setNonActiveVehicleCount] = useState();
 
   const [newPersonal, setNewPersonal] = useState({
     name: "",
@@ -51,11 +56,62 @@ export const MainContextProvider = ({ children }) => {
     nextInspection: "",
     tires: "",
     kilometers: 0,
+    isAssigned: false,
   });
 
-  // useEffect(() => {
-  //   console.log(newPersonal);
-  // }, [newPersonal]);
+  const getPersonalCount = async () => {
+    await fetch("http://localhost:8080/personal/count/", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setPersonalCount(result);
+        return result;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+
+        return false;
+      });
+
+    return false;
+  };
+  const getVehicleCount = async () => {
+    await fetch("http://localhost:8080/vehicle/count/", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        debugger;
+        setVehicleCount(result);
+        return result;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+
+        return false;
+      });
+
+    return false;
+  };
+  const getNonActiveVehicle = async () => {
+    await fetch("http://localhost:8080/vehicle/nonactivecount", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        debugger;
+        setNonActiveVehicleCount(result);
+        return result;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+
+        return false;
+      });
+
+    return false;
+  };
   const getSinglePersonal = async (id) => {
     await fetch("http://localhost:8080/personal/get/" + id, {
       method: "GET",
@@ -95,7 +151,6 @@ export const MainContextProvider = ({ children }) => {
     setNewPersonal({ ...newPersonal, [field]: value });
   };
   const newVehicleHandle = (field, value) => {
-    debugger;
     setNewVehicle({ ...newVehicle, [field]: value });
   };
   const addNewPersonal = () => {
@@ -108,14 +163,13 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log("Success addPersonal:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
   const addNewVehicle = () => {
-    debugger;
     fetch("http://localhost:8080/vehicle/create", {
       method: "POST", // or 'PUT'
       headers: {
@@ -125,7 +179,7 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log("Success addNewVehicle:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -137,7 +191,7 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((result) => {
-        console.log("Success:", result);
+        console.log("Success getVehicleList:", result);
         setVehicleList(result);
         return true;
       })
@@ -145,6 +199,29 @@ export const MainContextProvider = ({ children }) => {
         console.error("Error:", error);
         return false;
       });
+  };
+  const getVehicleListID = () => {
+    fetch("http://localhost:8080/vehicle", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        var vehicleTableArray = [];
+        result.forEach((vehicle, key) => {
+          vehicleTableArray.push({
+            id: vehicle._id,
+            plateNumber: vehicle.plateNumber,
+          });
+        });
+        setVehicleListAutoComplete(vehicleTableArray);
+        return true;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return false;
+      });
+
+    return false;
   };
   const getPersonalForTableData = () => {
     fetch("http://localhost:8080/personal", {
@@ -179,8 +256,7 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((result) => {
-        debugger;
-        console.log("Success:", result);
+        console.log("Success getVehiclesTable:", result);
         var vehicleTableArray = [];
         result.forEach((vehicle, key) => {
           vehicleTableArray.push({
@@ -217,24 +293,23 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log("Success: updatePersonal", data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-  const updateVehicle = (id, set) => {
-    console.log(set, "s", id);
+  const updateVehicle = (id, sets) => {
     fetch("http://localhost:8080/vehicle/update/" + id, {
       method: "PUT", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(set),
+      body: JSON.stringify(sets),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log("Success updateVehicle:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -249,7 +324,7 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log("Success removePersonal:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -264,13 +339,35 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log("Success removeVehicle:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-  const getPersonalList = async () => {};
+  const getPersonalList = async () => {
+    fetch("http://localhost:8080/personal", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        var personalTableArray = [];
+        result.forEach((personal, key) => {
+          personalTableArray.push({
+            id: personal._id,
+            name: personal.name + " " + personal.surname,
+          });
+        });
+        setPersonalListAutoComplete(personalTableArray);
+        return true;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return false;
+      });
+
+    return false;
+  };
 
   const getManufacturerList = () => {
     var newResults = [];
@@ -325,10 +422,21 @@ export const MainContextProvider = ({ children }) => {
     pageName,
     singleVehicle,
     userLogin,
+    personalCount,
+    personalListAutoComplete,
+    vehicleListAutoComplete,
+    vehicleCount,
+    nonActiveVehicleCount,
+    getNonActiveVehicle,
+    setVehicleListAutoComplete,
+    setPersonalListAutoComplete,
+    getPersonalCount,
+    setPersonalCount,
     setUserLogin,
     addNewVehicle,
     getVehicleForTableData,
     setPersonalList,
+    getVehicleListID,
     getVehicleList,
     setVehicleList,
     setSelectedPersonal,
@@ -346,6 +454,7 @@ export const MainContextProvider = ({ children }) => {
     getSingleVehicle,
     updateVehicle,
     removeVehicle,
+    getVehicleCount,
   };
 
   return (

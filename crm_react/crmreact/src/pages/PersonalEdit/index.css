@@ -13,3 +13,7 @@
 .bg-image {
   z-index: -1;
 }
+
+.loaderdiv {
+  box-sizing: border-box;
+}
