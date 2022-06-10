@@ -45,7 +45,7 @@ const LoginScreen = (props) => {
           </div>
           <div class="form__group">
             <input
-              type="text"
+              type="password"
               id="password"
               class="form__input"
               placeholder=" "

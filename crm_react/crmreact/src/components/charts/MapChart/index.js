@@ -168,8 +168,7 @@ const MapChart = (props) => {
     function clickText(d) {
       const args = {
         message: d.properties.NAME_1,
-        description:
-          "Active Aktive Arbeitskarte:" + Math.floor(Math.random() * 22),
+        description: "Aktive Arbeitskarte:" + Math.floor(Math.random() * 22),
         duration: 2,
       };
       notification.open(args);
