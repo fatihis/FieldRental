@@ -29,7 +29,7 @@ const MapChart = (props) => {
       .attr("preserveAspectRatio", "xMinYMin meet");
 
     var g = svg.append("g").append("g").attr("id", "states");
-    svg.append("text").attr("x", 10).attr("y", 20).text("Active Issues Map");
+    svg.append("text").attr("x", 10).attr("y", 20).text("Aktive Arbeitskarte");
 
     var collection = dummmy;
     var bounds = d3.geoBounds(collection),

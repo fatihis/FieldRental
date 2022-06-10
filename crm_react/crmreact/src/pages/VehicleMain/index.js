@@ -121,7 +121,7 @@ const VehicleMain = (props) => {
             <div className="d-flex flex-column">
               <img className="arrow-icon" src={upArrow}></img>
               <p className="mb-0">
-                aktiver Arbeiter ({localVehicleCount} im letzten Quartal)
+                aktives Fahrzeug ({localVehicleCount} im letzten Quartal)
               </p>
             </div>
           </div>
@@ -129,7 +129,7 @@ const VehicleMain = (props) => {
             <h3 className="fw-bold mt-2">{localNonActiveVehicleCount}</h3>
             <div className="d-flex flex-column">
               <img className="arrow-icon" src={downArrow}></img>
-              <p className="mb-0">Zahl der Arbeitnehmer, die kündigen</p>
+              <p className="mb-0">Anzahl der nicht zugeordneten Fahrzeuge</p>
             </div>
           </div>
           <div className="detail-text w-100 d-flex flex-row">
@@ -138,20 +138,18 @@ const VehicleMain = (props) => {
             </h3>
             <div className="d-flex flex-column">
               <img className="arrow-icon" src={downArrow}></img>
-              <p className="mb-0">
-                (%) {localVehicleCount - localNonActiveVehicleCount}
-              </p>
+              <p className="mb-0">Anzahl der zugewiesenen Fahrzeuge</p>
             </div>
           </div>
         </div>
         <div className="detail-card mt-5  d-flex flex-column px-5 pt-4">
-          <h2 className="detail-card-header fw-bold">ARBEITSKRÄFTE</h2>
+          <h2 className="detail-card-header fw-bold">Preise über FahrzeugeF</h2>
           <div className="detail-chart-wrapper d-flex w-100 h-100 mt-2">
             <div className="detail-chart-container w-100 h-100 ">
               <DonutChart
                 barColor={"#98ff66"}
                 chartId={"progressOne"}
-                chartTitle={"SLA RATING"}
+                chartTitle={"SLA-Bewertung"}
                 value={21}
               />
             </div>
@@ -159,7 +157,7 @@ const VehicleMain = (props) => {
               <DonutChart
                 barColor={"#6698ff"}
                 chartId={"progressTwo"}
-                chartTitle={"PBI Satisfaction"}
+                chartTitle={"PBI-Zufriedenheit"}
                 value={76}
               />
             </div>

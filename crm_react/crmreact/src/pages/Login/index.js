@@ -11,7 +11,7 @@ const LoginScreen = (props) => {
   let navigate = useNavigate();
 
   function handleSubmit() {
-    if (username == "1" && pass == "1") {
+    if (username === "admin" && pass === "123") {
       mainContext.setUserLogin(true);
       navigate("/", { replace: true });
     } else {

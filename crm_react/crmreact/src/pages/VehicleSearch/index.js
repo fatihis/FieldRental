@@ -9,6 +9,8 @@ const VehicleSearch = (props) => {
   const [options, setOptions] = useState([]);
   useEffect(() => {
     mainContext.getVehicleListID();
+    mainContext.setPageName("Fahrzeug Berarbeiten");
+    mainContext.setParentPageName("Vehicle");
   }, []);
   useEffect(() => {
     setVehicleListLocal(mainContext.vehicleListAutoComplete);
@@ -28,21 +30,28 @@ const VehicleSearch = (props) => {
   const searchResult = (searchName) =>
     vehicleListLocal.map((value, idx) => {
       const category = `${searchName}${idx}`;
-      debugger;
       var linkTo = "/fahrzeug-berarbeiten/" + value.id;
       if (value.plateNumber.toLowerCase().includes(searchName.toLowerCase())) {
         return {
-          value: category,
           label: (
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
+                width: "100%",
               }}
             >
-              <span>
-                <Link to={linkTo}>{value.plateNumber}</Link>
-              </span>
+              <Link
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                to={linkTo}
+              >
+                {value.plateNumber}
+              </Link>
             </div>
           ),
         };

@@ -21,7 +21,7 @@ const PersonalMain = (props) => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Driver License",
+      title: "Führerschein",
       dataIndex: "driverLisence",
       key: "driverLisence",
       render: (tags) => (
@@ -190,7 +190,7 @@ const PersonalMain = (props) => {
             <div className="detail-chart-container w-100 h-100 ">
               <DonutChart
                 chartId={"progressOne"}
-                chartTitle={"SLA RATING"}
+                chartTitle={"SLA-Bewertung"}
                 value={21}
                 barColor={"#ffff66"}
               />
@@ -198,7 +198,7 @@ const PersonalMain = (props) => {
             <div className="detail-chart-container w-100 h-100 ">
               <DonutChart
                 chartId={"progressTwo"}
-                chartTitle={"PBI Satisfaction"}
+                chartTitle={"PBI-Zufriedenheit"}
                 value={76}
                 barColor={"#6698ff"}
               />

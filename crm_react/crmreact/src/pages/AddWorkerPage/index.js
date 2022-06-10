@@ -253,74 +253,73 @@ const AddWorkerPage = (props) => {
             ) : null} */}
         </div>
         <div className="form-column f-column-3  d-flex flex-column align-items-start justify-content-center">
-          <div>
-            <h5>Fähigkeit zu fahren</h5>
-            <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
-              <FormInputContainer headerText={"Führerschein"}>
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{ width: "100%" }}
-                  bordered={false}
-                  placeholder="Führerschein"
-                  onChange={(e) => newPersonalHandle("driverLisence", e)}
-                >
-                  <Option value="Klasse A">Klasse A</Option>
-                  <Option value="Klasse B">Klasse B</Option>
-                  <Option value="Klasse C">Klasse C</Option>
-                  <Option value="Klasse D">Klasse D</Option>
-                  <Option value="Klasse E">Klasse E</Option>
-                </Select>
-              </FormInputContainer>
-            </div>
-            <h5>Inventar</h5>
-            <div className="form-column f-column-1 mb-5  d-flex flex-column align-items-start justify-content-center">
-              <FormInputContainer headerText={"Inventar"}>
-                <Checkbox.Group
-                  style={{ width: "100%" }}
-                  onChange={(e) => {
-                    newPersonalHandle("inventory", e);
-                    if (e.includes("Firmenwagen")) {
-                      setIsVehicleEnabled(true);
-                    } else {
-                      setIsVehicleEnabled(false);
-                    }
-                  }}
-                >
-                  <Row>
-                    <Col span={8}>
-                      <Checkbox value="Laptop">Laptop</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value="Firmenwagen">Firmenwagen</Checkbox>
-                    </Col>
-                  </Row>
+          <h5>Fähigkeit zu fahren</h5>
+          <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
+            <FormInputContainer headerText={"Führerschein"}>
+              <Select
+                mode="multiple"
+                allowClear
+                style={{ width: "100%" }}
+                bordered={false}
+                placeholder="Führerschein"
+                onChange={(e) => newPersonalHandle("driverLisence", e)}
+              >
+                <Option value="Klasse A">Klasse A</Option>
+                <Option value="Klasse B">Klasse B</Option>
+                <Option value="Klasse C">Klasse C</Option>
+                <Option value="Klasse D">Klasse D</Option>
+                <Option value="Klasse E">Klasse E</Option>
+              </Select>
+            </FormInputContainer>
+          </div>
+          <h5>Inventar</h5>
+          <div className="form-column f-column-1 mb-5  d-flex flex-column align-items-start justify-content-center">
+            <FormInputContainer headerText={"Inventar"}>
+              <Checkbox.Group
+                style={{ width: "100%" }}
+                onChange={(e) => {
+                  newPersonalHandle("inventory", e);
+                  if (e.includes("Firmenwagen")) {
+                    setIsVehicleEnabled(true);
+                  } else {
+                    setIsVehicleEnabled(false);
+                  }
+                }}
+              >
+                <Row>
                   <Col span={8}>
-                    <Checkbox value="Handy">Handy</Checkbox>
+                    <Checkbox value="Laptop">Laptop</Checkbox>
                   </Col>
-                </Checkbox.Group>
-              </FormInputContainer>
-              {isVehicleEnabled && vehicleListLocal != undefined ? (
-                <Select
-                  placeholder="Select a Vehicle"
-                  style={{ width: 320 }}
-                  onChange={(e) => newPersonalHandle("vehicleId", e)}
-                >
-                  {vehicleListLocal.map((element) => {
-                    return (
-                      <Option
-                        disabled={element.isAssigned === true ? true : false}
-                        value={element._id}
-                      >
-                        {element._id}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              ) : (
-                ""
-              )}
-              {/* <FormInputContainer
+                  <Col span={8}>
+                    <Checkbox value="Firmenwagen">Firmenwagen</Checkbox>
+                  </Col>
+                </Row>
+                <Col span={8}>
+                  <Checkbox value="Handy">Handy</Checkbox>
+                </Col>
+              </Checkbox.Group>
+            </FormInputContainer>
+            {isVehicleEnabled && vehicleListLocal != undefined ? (
+              <Select
+                placeholder="Select a Vehicle"
+                style={{ width: 320 }}
+                onChange={(e) => newPersonalHandle("vehicleId", e)}
+              >
+                {vehicleListLocal.map((element) => {
+                  return (
+                    <Option
+                      disabled={element.isAssigned === true ? true : false}
+                      value={element._id}
+                    >
+                      {element._id}
+                    </Option>
+                  );
+                })}
+              </Select>
+            ) : (
+              ""
+            )}
+            {/* <FormInputContainer
                   styles={{ display: "none" }}
                   headerText={"Zertifikate"}
                 >
@@ -336,20 +335,20 @@ const AddWorkerPage = (props) => {
                     <Option value="Z4">Z4</Option>
                   </Select>
                 </FormInputContainer> */}
-            </div>
-            <Space style={{ width: 220 }}>
-              <Button
-                type="primary"
-                onClick={() => {
-                  addNewPersonal();
-                  handleSubmitLoading();
-                }}
-                loading={loadingState}
-              >
-                ADD
-              </Button>
-            </Space>
           </div>
+          <Space style={{ width: 420 }}>
+            <Button
+              style={{ width: 150, height: 75 }}
+              type="primary"
+              onClick={() => {
+                addNewPersonal();
+                handleSubmitLoading();
+              }}
+              loading={loadingState}
+            >
+              ADDIEREN
+            </Button>
+          </Space>
         </div>
       </div>
     </div>
