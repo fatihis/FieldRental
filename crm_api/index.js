@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi"); //used for validation
 const app = express();
 const cors = require("cors");
-
+const ObjectId = require("mongodb").ObjectId;
 const corsOption = {
   origin: ["http://localhost:3000", "http://localhost:3001"],
 };
@@ -22,11 +22,6 @@ client.connect((err) => {
   const personalCollection = client.db("CRMNode").collection("personal");
   const vehicleCollection = client.db("CRMNode").collection("vehicle");
 
-  const books = [
-    { title: "Harry Potter", id: 1 },
-    { title: "Twilight", id: 2 },
-    { title: "Lorien Legacies", id: 3 },
-  ];
   //#region !! PERSONAL !!
   app.get("/personal", (req, res) => {
     personalCollection.find({}).toArray(function (err, result) {
@@ -37,16 +32,35 @@ client.connect((err) => {
       }
     });
   });
-  app.get("/personal/get/:id", (req, res) => {
-    const personal = personalCollection.findOne({ id: req.params.id });
 
-    if (!personal)
-      res
-        .status(404)
-        .send(
-          '<h2 style="font-family: Malgun Gothic; color: darkred;">Ooops... Cant find what you are looking for!</h2>'
-        );
-    res.status(200).send(personal);
+  app.get("/personal/count", (req, res) => {
+    const result = personalCollection.countDocuments({});
+    result.then((e) => {
+      console.log(e);
+      if (!e) {
+        res.status(404).send("err");
+      } else {
+        res.write(e.toString());
+        res.status(200);
+        res.end();
+      }
+    });
+  });
+
+  app.get("/personal/get/:id", (req, res) => {
+    personalCollection
+      .findOne({
+        _id: new ObjectId(req.params["id"]),
+      })
+      .then((personal) => {
+        if (!personal)
+          res
+            .status(404)
+            .send(
+              '<h2 style="font-family: Malgun Gothic; color: darkred;">Ooops... Cant find what you are looking for!</h2>'
+            );
+        res.status(200).send(personal);
+      });
   });
   app.post("/personal/create", async (req, res) => {
     const { error } = validatePersonal(req.body);
@@ -55,11 +69,26 @@ client.connect((err) => {
       res.status(400).send(error.details[0].message);
       return;
     }
+
     const result = personalCollection.insertOne(req.body);
+    if (req.body.inventory.includes("Firmenwagen")) {
+      console.log(req.body.vehicleId, "vehicID");
+
+      const filter = { _id: new ObjectId(req.body.vehicleId) };
+      // update the value of the 'z' field to 42
+      const updateDocumentOne = {
+        $set: { isAssigned: true },
+      };
+      const updateDocumentTwo = {
+        $set: { assignedPersonalId: new ObjectId(result._id) },
+      };
+      await vehicleCollection.updateOne(filter, updateDocumentOne);
+      await vehicleCollection.updateOne(filter, updateDocumentTwo);
+    }
     res.send(result);
   });
   app.delete("/personal/delete/:id", (req, res) => {
-    const query = { _id: req.params.id };
+    const query = { _id: new ObjectId(req.params.id) };
     const result = personalCollection.deleteOne(query);
     if (result.deletedCount === 1) {
       res.status(200).send("Successfully deleted one document.");
@@ -68,20 +97,34 @@ client.connect((err) => {
         .status(400)
         .send("No documents matched the query. Deleted 0 documents.");
     }
-    res.send(result);
   });
 
   app.put("/personal/update/:id", (req, res) => {
-    const filter = { _id: req.params.id };
+    const filter = { _id: new ObjectId(req.params.id) };
     // update the value of the 'z' field to 42
-    const updateDocument = {
-      //    $set: {
-      //       z: 42,
-      //    },
-      $set: req.body,
-    };
+    req.body.forEach((element) => {
+      const updateDocument = {
+        $set: element,
+      };
+      if (element.hasOwnProperty("vehicleId")) {
+        const filter = { _id: new ObjectId(element.vehicleId) };
+        // update the value of the 'z' field to 42
+        const updateDocumentOne = {
+          $set: { isAssigned: true },
+        };
+        const updateDocumentTwo = {
+          $set: { assignedPersonalId: new ObjectId(req.params.id) },
+        };
+        vehicleCollection.updateOne(filter, updateDocumentOne);
+        vehicleCollection.updateOne(filter, updateDocumentTwo);
+      }
+      personalCollection
+        .updateOne(filter, updateDocument)
+        .then((a) => {})
+        .catch((e) => res.send(e));
+    });
 
-    res.send(updatePersonal(filter, updateDocument));
+    res.send("Success");
   });
 
   const updatePersonal = async (filter, updateDocument) => {
@@ -93,7 +136,9 @@ client.connect((err) => {
   //#region !! Vehicle !!
 
   app.get("/vehicle", (req, res) => {
-    vehicle.find({}).toArray(function (err, result) {
+    vehicleCollection.find({}).toArray(function (err, result) {
+      console.log("as", result);
+
       if (err) {
         res.status(404).send(err);
       } else {
@@ -102,15 +147,19 @@ client.connect((err) => {
     });
   });
   app.get("/vehicle/get/:id", (req, res) => {
-    const vehicle = vehicleCollection.findOne({ id: req.params.id });
-
-    if (!vehicle)
-      res
-        .status(404)
-        .send(
-          '<h2 style="font-family: Malgun Gothic; color: darkred;">Ooops... Cant find what you are looking for!</h2>'
-        );
-    res.status(200).send(vehicle);
+    vehicleCollection
+      .findOne({
+        _id: new ObjectId(req.params["id"]),
+      })
+      .then((vehicle) => {
+        if (!vehicle)
+          res
+            .status(404)
+            .send(
+              '<h2 style="font-family: Malgun Gothic; color: darkred;">Ooops... Cant find what you are looking for!</h2>'
+            );
+        res.status(200).send(vehicle);
+      });
   });
   app.post("/vehicle/create", async (req, res) => {
     const { error } = validateVehicle(req.body);
@@ -122,7 +171,7 @@ client.connect((err) => {
     res.send(result);
   });
   app.delete("/vehicle/delete/:id", (req, res) => {
-    const query = { _id: req.params.id };
+    const query = { _id: new ObjectId(req.params.id) };
     const result = vehicleCollection.deleteOne(query);
     if (result.deletedCount === 1) {
       res.status(200).send("Successfully deleted one document.");
@@ -131,94 +180,46 @@ client.connect((err) => {
         .status(400)
         .send("No documents matched the query. Deleted 0 documents.");
     }
-    res.send(result);
   });
 
   app.put("/vehicle/update/:id", async (req, res) => {
-    const filter = { _id: req.params.id };
+    const filter = { _id: new ObjectId(req.params.id) };
     // update the value of the 'z' field to 42
-    const updateDocument = {
-      //    $set: {
-      //       z: 42,
-      //    },
-      $set: req.body,
-    };
-    const result = await personalCollection.updateOne(filter, updateDocument);
-    res.send(result);
+    req.body.forEach((element) => {
+      const updateDocument = {
+        $set: element,
+      };
+
+      vehicleCollection
+        .updateOne(filter, updateDocument)
+        .then((a) => console.log(a))
+        .catch((e) => res.send(e));
+    });
   });
-
-  //READ Request Handlers
-  app.get("/", (req, res) => {
-    res.send("Welcome to Edurekas REST API with Node.js Tutorial!!");
+  app.get("/vehicle/count", (req, res) => {
+    const result = vehicleCollection.countDocuments({});
+    result.then((e) => {
+      if (!e) {
+        res.status(404).send("err");
+      } else {
+        res.write(e.toString());
+        res.status(200);
+        res.end();
+      }
+    });
   });
-
-  app.get("/api/books", (req, res) => {
-    res.send(books);
+  app.get("/vehicle/nonactivecount", (req, res) => {
+    const result = vehicleCollection.countDocuments({ isAssigned: false });
+    result.then((e) => {
+      if (!e) {
+        res.status(404).send("err");
+      } else {
+        res.write(e.toString());
+        res.status(200);
+        res.end();
+      }
+    });
   });
-
-  app.get("/api/books/:id", (req, res) => {
-    const book = books.find((c) => c.id === parseInt(req.params.id));
-
-    if (!book)
-      res
-        .status(404)
-        .send(
-          '<h2 style="font-family: Malgun Gothic; color: darkred;">Ooops... Cant find what you are looking for!</h2>'
-        );
-    res.send(book);
-  });
-
-  //CREATE Request Handler
-  app.post("/api/books", (req, res) => {
-    const { error } = validateBook(req.body);
-    if (error) {
-      res.status(400).send(error.details[0].message);
-      return;
-    }
-    const book = {
-      id: books.length + 1,
-      title: req.body.title,
-    };
-    books.push(book);
-    res.send(book);
-  });
-
-  //UPDATE Request Handler
-  app.put("/api/books/:id", (req, res) => {
-    const book = books.find((c) => c.id === parseInt(req.params.id));
-    if (!book)
-      res
-        .status(404)
-        .send(
-          '<h2 style="font-family: Malgun Gothic; color: darkred;">Not Found!! </h2>'
-        );
-
-    const { error } = validateBook(req.body);
-    if (error) {
-      res.status(400).send(error.details[0].message);
-      return;
-    }
-
-    book.title = req.body.title;
-    res.send(book);
-  });
-
-  //DELETE Request Handler
-  app.delete("/api/books/:id", (req, res) => {
-    const book = books.find((c) => c.id === parseInt(req.params.id));
-    if (!book)
-      res
-        .status(404)
-        .send(
-          '<h2 style="font-family: Malgun Gothic; color: darkred;"> Not Found!! </h2>'
-        );
-
-    const index = books.indexOf(book);
-    books.splice(index, 1);
-
-    res.send(book);
-  });
-
   function validatePersonal(personal) {
     const schema = Joi.object({
       name: Joi.string().min(3).required(),
