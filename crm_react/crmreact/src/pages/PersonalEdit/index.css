@@ -1,0 +1,19 @@
+.form-column {
+  margin-right: 5.5rem;
+  max-width: 330px;
+}
+
+.container-ro {
+  -webkit-box-shadow: 0px 0px 47px -4px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 47px -4px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 47px -4px rgba(0, 0, 0, 0.75);
+  max-height: 580px;
+}
+
+.bg-image {
+  z-index: -1;
+}
+
+.loaderdiv {
+  box-sizing: border-box;
+}

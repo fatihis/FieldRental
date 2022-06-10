@@ -16,7 +16,7 @@
   border: 0px solid #000000;
   background-color: #fafafa;
   max-height: 370px;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 .bottom-detail-wrapper {
   height: 35%;

@@ -11,19 +11,30 @@ import {
   Menu,
   Dropdown,
   DatePicker,
+  AutoComplete,
 } from "antd";
-
 import { AiOutlineEuroCircle, AiOutlineDollarCircle } from "react-icons/ai";
 import { PoweroffOutlined } from "@ant-design/icons";
 import "./index.css";
 import FormInputContainer from "../../components/molecules/FormInputContainer";
+import { useContext } from "react";
+import { MainContext } from "../../api/MainContext";
+import { useNavigate } from "react-router-dom";
 const AddVehicle = (props) => {
-  const [nameState, setnameState] = useState();
-  const [vornameState, setVornameState] = useState();
-  const [hasVehicle, setHasVehicle] = useState();
   const [isInsertSucceded, setIsInsertSucceded] = useState(false);
   const [currency, setCurrency] = useState("euro");
+  const [manifacturerListLocal, setManifacturerListLocal] = useState([]);
+  const [loadingState, setLoadingState] = useState(false);
+  let navigate = useNavigate();
 
+  const {
+    newVehicleHandle,
+    addNewVehicle,
+    getManufacturerList,
+    manifacturers,
+    setParentPageName,
+    setPageName,
+  } = useContext(MainContext);
   const { Option } = Select;
 
   const euroDollarDropdown = (
@@ -32,7 +43,10 @@ const AddVehicle = (props) => {
         {
           label: (
             <Button
-              onClick={() => setCurrency("euro")}
+              onClick={() => {
+                setCurrency("euro");
+                newVehicleHandle("priceCurrency", "euro");
+              }}
               className=" border-0"
               size={25}
             >
@@ -43,7 +57,10 @@ const AddVehicle = (props) => {
         {
           label: (
             <Button
-              onClick={() => setCurrency("dollar")}
+              onClick={() => {
+                setCurrency("dollar");
+                newVehicleHandle("priceCurrency", "dollar");
+              }}
               className=" border-0"
               size={25}
             >
@@ -54,6 +71,29 @@ const AddVehicle = (props) => {
       ]}
     />
   );
+  const searchCar = (e) => {
+    setManifacturerListLocal(
+      manifacturers.filter((elem) => {
+        if (elem.element.includes(e)) {
+          return true;
+        }
+      })
+    );
+  };
+  useEffect(() => {
+    setPageName("Fahrzeug Anlegen");
+    setParentPageName("Fuhrpark");
+    getManufacturerList();
+  }, []);
+  const handleSubmitLoading = () => {
+    setLoadingState(true);
+    setTimeout(() => {
+      setLoadingState(false);
+    }, 2000);
+    setTimeout(() => {
+      navigate("/fuhrpark");
+    }, 2500);
+  };
   return (
     <div className="  mt-20 p-10  d-flex  flex-column align-items-center justify-content-center ">
       <h2 className="  fw-bold  text-left self-center font-semibold">
@@ -62,12 +102,13 @@ const AddVehicle = (props) => {
       <div className=" d-flex flex-row align-items-start justify-content-center ">
         <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
           <h5>Anschaffungsart</h5>
+
           <FormInputContainer headerText={""}>
             <Select
               defaultValue="Geleast"
               bordered={false}
               style={{ width: "100%" }}
-              onChange={(e) => setHasVehicle(e)}
+              onChange={(e) => newVehicleHandle("inquiryType", e)}
             >
               <Option value="geleast">Geleast</Option>
               <Option value="Finaziert">Finaziert</Option>
@@ -82,7 +123,7 @@ const AddVehicle = (props) => {
                 bordered={false}
                 placeholder="Kaufwert"
                 type={"number"}
-                onChange={(e) => setVornameState(e.target.value)}
+                onChange={(e) => newVehicleHandle("price", e.target.value)}
               />
               <div className="w-20 d-flex align-items-center justify-content-center">
                 <Dropdown overlay={euroDollarDropdown}>
@@ -106,19 +147,21 @@ const AddVehicle = (props) => {
                 <DatePicker
                   placeholder="Datum auswählen"
                   style={{ width: "100%" }}
+                  onChange={(e, dateString) =>
+                    newVehicleHandle("timeBegin", dateString)
+                  }
                 />
               </FormInputContainer>
               <FormInputContainer headerText={"Ende"}>
                 <DatePicker
+                  onChange={(e, dateString) =>
+                    newVehicleHandle("timeEnd", dateString)
+                  }
                   placeholder="Datum auswählen"
                   style={{ width: "100%" }}
                 />
               </FormInputContainer>
             </div>
-          </div>
-        </div>
-        <div className="form-column f-column-2 d-flex flex-column align-items-start justify-content-center">
-          <div>
             <h5>Raten</h5>
             <div className="form-column f-column-1  d-flex flex-column align-items-start justify-content-center">
               <FormInputContainer headerText={"Monatliche Rate"}>
@@ -126,7 +169,9 @@ const AddVehicle = (props) => {
                   bordered={false}
                   placeholder="Monatliche Rate"
                   type={"number"}
-                  onChange={(e) => setVornameState(e.target.value)}
+                  onChange={(e) =>
+                    newVehicleHandle("monthlyPrice", e.target.value)
+                  }
                 />
               </FormInputContainer>
               <FormInputContainer headerText={"Schlussrate"}>
@@ -134,21 +179,89 @@ const AddVehicle = (props) => {
                   bordered={false}
                   placeholder="Schlussrate"
                   type={"number"}
-                  onChange={(e) => setVornameState(e.target.value)}
-                />
-              </FormInputContainer>
-              <h5>TÜV</h5>
-
-              <FormInputContainer headerText={"Restwert"}>
-                <DatePicker
-                  placeholder="Datum auswählen"
-                  style={{ width: "100%" }}
-                  picker="month"
+                  onChange={(e) => newVehicleHandle("lastPay", e.target.value)}
                 />
               </FormInputContainer>
             </div>
           </div>
+        </div>
+        <div className="form-column f-column-2 d-flex flex-column align-items-start justify-content-center">
+          <div>
+            <h5>Allgemeine Information</h5>
+            <FormInputContainer headerText={"Kennzeichen"}>
+              <Input
+                bordered={false}
+                placeholder="Kennzeichen"
+                onChange={(e) =>
+                  newVehicleHandle("plateNumber", e.target.value)
+                }
+              />
+            </FormInputContainer>
 
+            <FormInputContainer headerText={"Marke"}>
+              <Input
+                placeholder="Marke"
+                bordered={false}
+                style={{ width: "100%" }}
+                onChange={(e) =>
+                  newVehicleHandle("manifacturer", e.target.value)
+                }
+              ></Input>
+            </FormInputContainer>
+
+            {/* {manifacturerListLocal != undefined ? (
+              <FormInputContainer headerText={"Marke"}>
+                <AutoComplete
+                  options={manifacturerListLocal}
+                  style={{ width: "100%" }}
+                  onSearch={(e) => searchCar(e)}
+                  onSelect={(e) => newVehicleHandle("manifacturer", e)}
+                  placeholder="control mode"
+                />
+              </FormInputContainer>
+            ) : (
+              ""
+            )} */}
+            <FormInputContainer headerText={"Model"}>
+              <Input
+                bordered={false}
+                placeholder="Model"
+                onChange={(e) => newVehicleHandle("model", e.target.value)}
+              />
+            </FormInputContainer>
+            <FormInputContainer headerText={"Jahr"}>
+              <Input
+                bordered={false}
+                placeholder="Jahr"
+                type={"number"}
+                onChange={(e) => newVehicleHandle("year", e.target.value)}
+              />
+            </FormInputContainer>
+          </div>
+          <h5>TÜV</h5>
+
+          <FormInputContainer headerText={"Restwert"}>
+            <DatePicker
+              placeholder="Datum auswählen"
+              style={{ width: "100%" }}
+              picker="month"
+              onChange={(e, dateString) =>
+                newVehicleHandle("TUVdate", dateString)
+              }
+            />
+          </FormInputContainer>
+          <hr class="rounded-separator"></hr>
+
+          <div>
+            <FormInputContainer headerText={"Kilometerstand"}>
+              <Input
+                bordered={false}
+                placeholder="Kilometerstand"
+                type={"number"}
+                onChange={(e) => newVehicleHandle("kilometers", e.target.value)}
+              />
+            </FormInputContainer>
+          </div>
           {/* {vehicleListState != undefined ? (
             <Select
               placeholder="Select a Vehicle"
@@ -176,12 +289,18 @@ const AddVehicle = (props) => {
                 <DatePicker
                   placeholder="Datum auswählen"
                   style={{ width: "100%" }}
+                  onChange={(e, dateString) =>
+                    newVehicleHandle("lastInspection", dateString)
+                  }
                 />
               </FormInputContainer>
               <FormInputContainer headerText={"nächste Inspektion"}>
                 <DatePicker
                   placeholder="Datum auswählen"
                   style={{ width: "100%" }}
+                  onChange={(e, dateString) =>
+                    newVehicleHandle("nextInspection", dateString)
+                  }
                 />
               </FormInputContainer>
             </div>
@@ -193,7 +312,7 @@ const AddVehicle = (props) => {
                   defaultValue="Allwetter"
                   style={{ width: 300 }}
                   bordered={false}
-                  onChange={(e) => setHasVehicle(e)}
+                  onChange={(e) => newVehicleHandle("tires", e)}
                 >
                   <Option value="Sommer">Sommer</Option>
                   <Option value="Winter">Winter</Option>
@@ -201,20 +320,16 @@ const AddVehicle = (props) => {
                 </Select>
               </FormInputContainer>
             </div>
-            <hr class="rounded-separator"></hr>
 
-            <div>
-              <FormInputContainer headerText={"Kilometerstand"}>
-                <Input
-                  bordered={false}
-                  placeholder="Kilometerstand"
-                  type={"number"}
-                  onChange={(e) => setVornameState(e.target.value)}
-                />
-              </FormInputContainer>
-            </div>
             <Space style={{ width: 220 }}>
-              <Button type="primary" loading={isInsertSucceded}>
+              <Button
+                onClick={() => {
+                  addNewVehicle();
+                  handleSubmitLoading();
+                }}
+                type="primary"
+                loading={loadingState}
+              >
                 ADD
               </Button>
             </Space>
