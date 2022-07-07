@@ -5,7 +5,6 @@ import $ from "jquery";
 import dummmy from "./dummy.json";
 import "./index.css";
 import { notification } from "antd";
-import { geoEqualEarth, geoPath } from "https://cdn.skypack.dev/d3-geo@3";
 import { AiOutlineConsoleSql } from "react-icons/ai";
 const MapChart = (props) => {
   const divRef = useRef();
