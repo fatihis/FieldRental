@@ -1,4 +1,3 @@
-import ObjectID from "bson-objectid";
 import { json } from "d3";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -60,7 +59,7 @@ export const MainContextProvider = ({ children }) => {
   });
 
   const getPersonalCount = async () => {
-    await fetch("http://localhost:8080/personal/count/", {
+    await fetch("https://react-crm-api-deutsch.herokuapp.com/personal/count/", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -77,7 +76,7 @@ export const MainContextProvider = ({ children }) => {
     return false;
   };
   const getVehicleCount = async () => {
-    await fetch("http://localhost:8080/vehicle/count/", {
+    await fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle/count/", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -95,9 +94,12 @@ export const MainContextProvider = ({ children }) => {
     return false;
   };
   const getNonActiveVehicle = async () => {
-    await fetch("http://localhost:8080/vehicle/nonactivecount", {
-      method: "GET",
-    })
+    await fetch(
+      "https://react-crm-api-deutsch.herokuapp.com/vehicle/nonactivecount",
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((result) => {
         debugger;
@@ -113,9 +115,12 @@ export const MainContextProvider = ({ children }) => {
     return false;
   };
   const getSinglePersonal = async (id) => {
-    await fetch("http://localhost:8080/personal/get/" + id, {
-      method: "GET",
-    })
+    await fetch(
+      "https://react-crm-api-deutsch.herokuapp.com/personal/get/" + id,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((result) => {
         setSinglePersonal(result);
@@ -131,9 +136,12 @@ export const MainContextProvider = ({ children }) => {
     return false;
   };
   const getSingleVehicle = async (id) => {
-    await fetch("http://localhost:8080/vehicle/get/" + id, {
-      method: "GET",
-    })
+    await fetch(
+      "https://react-crm-api-deutsch.herokuapp.com/vehicle/get/" + id,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((result) => {
         setSingleVehicle(result);
@@ -154,7 +162,7 @@ export const MainContextProvider = ({ children }) => {
     setNewVehicle({ ...newVehicle, [field]: value });
   };
   const addNewPersonal = () => {
-    fetch("http://localhost:8080/personal/create", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/personal/create", {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -170,7 +178,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const addNewVehicle = () => {
-    fetch("http://localhost:8080/vehicle/create", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle/create", {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -186,7 +194,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const getVehicleList = () => {
-    fetch("http://localhost:8080/vehicle", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -201,7 +209,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const getVehicleListID = () => {
-    fetch("http://localhost:8080/vehicle", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -224,7 +232,7 @@ export const MainContextProvider = ({ children }) => {
     return false;
   };
   const getPersonalForTableData = () => {
-    fetch("http://localhost:8080/personal", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/personal", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -251,7 +259,7 @@ export const MainContextProvider = ({ children }) => {
     return false;
   };
   const getVehicleForTableData = () => {
-    fetch("http://localhost:8080/vehicle", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -284,7 +292,7 @@ export const MainContextProvider = ({ children }) => {
 
   const updatePersonal = (id, set) => {
     console.log(set, "s", id);
-    fetch("http://localhost:8080/personal/update/" + id, {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/personal/update/" + id, {
       method: "PUT", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -300,7 +308,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const updateVehicle = (id, sets) => {
-    fetch("http://localhost:8080/vehicle/update/" + id, {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle/update/" + id, {
       method: "PUT", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -316,7 +324,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const removePersonal = (id) => {
-    fetch("http://localhost:8080/personal/delete/" + id, {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/personal/delete/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -331,7 +339,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const removeVehicle = (id) => {
-    fetch("http://localhost:8080/vehicle/delete/" + id, {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/vehicle/delete/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -346,7 +354,7 @@ export const MainContextProvider = ({ children }) => {
       });
   };
   const getPersonalList = async () => {
-    fetch("http://localhost:8080/personal", {
+    fetch("https://react-crm-api-deutsch.herokuapp.com/personal", {
       method: "GET",
     })
       .then((response) => response.json())
