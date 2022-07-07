@@ -46,7 +46,7 @@ const Home = (props) => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Driver License",
+      title: "Führerschein",
       dataIndex: "driverLisence",
       key: "driverLisence",
       render: (tags) => (
@@ -63,12 +63,12 @@ const Home = (props) => {
       ),
     },
     {
-      title: "Address",
+      title: "Straße",
       dataIndex: "address",
       key: "address",
     },
     {
-      title: "Inventory",
+      title: "Inventar",
       key: "inventory",
       dataIndex: "inventory",
       render: (tags) => (
@@ -110,19 +110,19 @@ const Home = (props) => {
         <div className="d-flex flex-col gap-2 flex-1">
           <DashboardCard
             cardImage={<GrUserWorker size={40} />}
-            cardHeader={"Active Workers"}
+            cardHeader={"Aktiven Personal"}
             cardText={localPersonalCount}
             cardBg={"rgba(217,241,242)"}
           />
           <DashboardCard
             cardImage={<GrAlert size={40} />}
-            cardHeader={"Open Issues"}
+            cardHeader={"Aktive Offene Punkte"}
             cardText={"12"}
             cardBg={"rgb(255,244,230)"}
           />
           <DashboardCard
             cardImage={<GrAnalytics size={40} />}
-            cardHeader={"First Quarter Turnover"}
+            cardHeader={"Umsatz im ersten Quartal"}
             cardText={"301.101$"}
             cardBg={"rgb(254,251,229)"}
           />
@@ -142,14 +142,14 @@ const Home = (props) => {
         <div className="detail-chart-containers p-4  mt-2 w-72">
           <DonutChart
             chartId={"progressTwo"}
-            chartTitle={"PBI Satisfaction"}
+            chartTitle={"PBI-Zufriedenheit"}
             value={76}
           />
         </div>
         <div className="detail-chart-containers p-4  mt-2 w-72">
           <DonutChart
             chartId={"progressOne"}
-            chartTitle={"Vehicle Using Rate"}
+            chartTitle={"Fahrzeugnutzungsrate"}
             value={76}
             barColor={"red"}
           />

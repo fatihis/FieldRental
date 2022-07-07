@@ -107,7 +107,7 @@ const PersonalEdit = (props) => {
       </div>
       <div className="d-flex ">
         <div className=" w-52 h-52 p-5 bg-slate-100 flex align-items-center justify-center">
-          photos belki
+          Foto
         </div>
         <div className="d-flex align-items-end pb-4">
           {" "}
@@ -345,16 +345,16 @@ const PersonalEdit = (props) => {
                   disabled={isEditable}
                   placeholder="Select a Vehicle"
                   style={{ width: 280 }}
-                  defaultValue={choosen.vehicleId}
+                  defaultValue={choosen._id}
                   onChange={(e) => updatePersonalHandle("vehicleId", e)}
                 >
                   {vehicleListLocal.map((element) => {
                     return (
                       <Option
                         disabled={element.isAssigned === true ? true : false}
-                        value={element._id}
+                        value={element.plateNumber}
                       >
-                        {element._id}
+                        {element.plateNumber}
                       </Option>
                     );
                   })}

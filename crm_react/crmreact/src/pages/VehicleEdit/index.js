@@ -138,7 +138,7 @@ const VehicleEdit = (props) => {
     <div className="w-100 h-100 px-10 py-10 ">
       <div className="d-flex ">
         <div className=" w-52 h-52 p-5 bg-slate-100 flex align-items-center justify-center">
-          photos belki
+          Foto
         </div>
         <div className="d-flex align-items-end pb-4">
           {" "}

@@ -9,6 +9,8 @@ const PersonalSearch = (props) => {
   const [options, setOptions] = useState([]);
   useEffect(() => {
     mainContext.getPersonalList();
+    mainContext.setPageName("Benutzerverwaltung");
+    mainContext.setParentPageName("Personal");
   }, []);
   useEffect(() => {
     setPersonalListLocal(mainContext.personalListAutoComplete);
@@ -39,9 +41,17 @@ const PersonalSearch = (props) => {
                 justifyContent: "center",
               }}
             >
-              <span>
-                <Link to={linkTo}>{value.name}</Link>
-              </span>
+              <Link
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                to={linkTo}
+              >
+                {value.name}
+              </Link>
             </div>
           ),
         };

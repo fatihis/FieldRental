@@ -283,57 +283,56 @@ const AddVehicle = (props) => {
         </div>
         <div className="form-column f-column-3  d-flex flex-column align-items-start justify-content-center">
           <div>
-            <div>
-              <h5>Inspektion</h5>
-              <FormInputContainer headerText={"letzte Inspektion"}>
-                <DatePicker
-                  placeholder="Datum auswählen"
-                  style={{ width: "100%" }}
-                  onChange={(e, dateString) =>
-                    newVehicleHandle("lastInspection", dateString)
-                  }
-                />
-              </FormInputContainer>
-              <FormInputContainer headerText={"nächste Inspektion"}>
-                <DatePicker
-                  placeholder="Datum auswählen"
-                  style={{ width: "100%" }}
-                  onChange={(e, dateString) =>
-                    newVehicleHandle("nextInspection", dateString)
-                  }
-                />
-              </FormInputContainer>
-            </div>
-            <hr class="rounded-separator"></hr>
-
-            <div>
-              <FormInputContainer headerText={"Bereifung"}>
-                <Select
-                  defaultValue="Allwetter"
-                  style={{ width: 300 }}
-                  bordered={false}
-                  onChange={(e) => newVehicleHandle("tires", e)}
-                >
-                  <Option value="Sommer">Sommer</Option>
-                  <Option value="Winter">Winter</Option>
-                  <Option value="Allwetter">Allwetter</Option>
-                </Select>
-              </FormInputContainer>
-            </div>
-
-            <Space style={{ width: 220 }}>
-              <Button
-                onClick={() => {
-                  addNewVehicle();
-                  handleSubmitLoading();
-                }}
-                type="primary"
-                loading={loadingState}
-              >
-                ADD
-              </Button>
-            </Space>
+            <h5>Inspektion</h5>
+            <FormInputContainer headerText={"letzte Inspektion"}>
+              <DatePicker
+                placeholder="Datum auswählen"
+                style={{ width: "100%" }}
+                onChange={(e, dateString) =>
+                  newVehicleHandle("lastInspection", dateString)
+                }
+              />
+            </FormInputContainer>
+            <FormInputContainer headerText={"nächste Inspektion"}>
+              <DatePicker
+                placeholder="Datum auswählen"
+                style={{ width: "100%" }}
+                onChange={(e, dateString) =>
+                  newVehicleHandle("nextInspection", dateString)
+                }
+              />
+            </FormInputContainer>
           </div>
+          <hr class="rounded-separator"></hr>
+
+          <div>
+            <FormInputContainer headerText={"Bereifung"}>
+              <Select
+                defaultValue="Allwetter"
+                style={{ width: 300 }}
+                bordered={false}
+                onChange={(e) => newVehicleHandle("tires", e)}
+              >
+                <Option value="Sommer">Sommer</Option>
+                <Option value="Winter">Winter</Option>
+                <Option value="Allwetter">Allwetter</Option>
+              </Select>
+            </FormInputContainer>
+          </div>
+
+          <Space style={{ width: 420 }}>
+            <Button
+              style={{ width: 150, height: 75 }}
+              onClick={() => {
+                addNewVehicle();
+                handleSubmitLoading();
+              }}
+              type="primary"
+              loading={loadingState}
+            >
+              ADDIEREN
+            </Button>
+          </Space>
         </div>
       </div>
     </div>

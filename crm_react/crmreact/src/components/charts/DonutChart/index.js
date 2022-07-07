@@ -83,7 +83,7 @@ const DonutChart = ({ value, chartTitle, chartId, barColor }) => {
   return (
     <div className="donut-container">
       <h5 className=" text-lg">{chartTitle}</h5>
-      <div className={chartId} ref={divRef}></div>
+      <div style={{ maxWidth: "273px" }} className={chartId} ref={divRef}></div>
     </div>
   );
 };
