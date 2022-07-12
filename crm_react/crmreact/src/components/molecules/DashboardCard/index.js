@@ -6,7 +6,7 @@ import "./index.css";
 const DashboardCard = ({ cardImage, cardHeader, cardText, cardBg }) => {
   return (
     <div
-      className="dashboard-card w-72 h-32 flex rounded-xl flex relative "
+      className="dashboard-card w-72 h-32 xl:w-60 xl:h-24 flex rounded-xl flex relative "
       style={{ backgroundColor: cardBg }}
     >
       <div className="absolute top-3 right-3">
@@ -23,8 +23,8 @@ const DashboardCard = ({ cardImage, cardHeader, cardText, cardBg }) => {
         </div>
       </div>
       <div className="db-card-text-container flex flex-col items-center justify-center flex-2  w-full h-full pt-4">
-        <p className="font-italic text-md pr-2">{cardHeader}</p>
-        <p className="font-bold pr-2">{cardText}</p>
+        <p className="font-italic text-md xl:text-sm pr-2">{cardHeader}</p>
+        <p className="font-bold xl:text-xs pr-2">{cardText}</p>
       </div>
     </div>
   );

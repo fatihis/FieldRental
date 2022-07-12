@@ -48,3 +48,15 @@
   width: 18px;
   height: 18px;
 }
+
+@media (min-width: 330px) and (max-width: 1160px) {
+  .detail-main-header {
+    display: none !important;
+  }
+  .bottom-detail-wrapper {
+    display: none !important;
+  }
+  .ant-table-wrapper {
+    overflow-x: auto;
+  }
+}

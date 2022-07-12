@@ -6,6 +6,7 @@ import MapChart from "../../components/charts/MapChart";
 import DonutChart from "../../components/charts/DonutChart";
 import AntdTable from "../../components/organisms/AntdTable";
 import { Tag, Space } from "antd";
+import $ from "jquery";
 
 import "./index.css";
 import SortableBarChart from "../../components/charts/SortableBarChart";
@@ -106,31 +107,35 @@ const Home = (props) => {
 
   return (
     <div className="homepage-wrapper flex flex-col ">
-      <div className="home-left-side-top-left flex items-center px-5 gap-5 py-4 flex-1 w-auto h-full border-r-4 border-b-4">
-        <div className="d-flex flex-col gap-2 flex-1">
+      <div className="home-left-side-top-left flex  px-5 xl:px-2 gap-5 xl:gap-0  py-4  flex-1 w-auto  border-r-4 border-b-4">
+        <div className="left-side-first-col d-flex flex-col gap-2 flex-1 ">
           <DashboardCard
-            cardImage={<GrUserWorker size={40} />}
+            cardImage={
+              <GrUserWorker size={window.innerWidth > 1900 ? 40 : 30} />
+            }
             cardHeader={"Aktiven Personal"}
             cardText={localPersonalCount}
             cardBg={"rgba(217,241,242)"}
           />
           <DashboardCard
-            cardImage={<GrAlert size={40} />}
+            cardImage={<GrAlert size={window.innerWidth > 1900 ? 40 : 30} />}
             cardHeader={"Aktive Offene Punkte"}
             cardText={"12"}
             cardBg={"rgb(255,244,230)"}
           />
           <DashboardCard
-            cardImage={<GrAnalytics size={40} />}
+            cardImage={
+              <GrAnalytics size={window.innerWidth > 1900 ? 40 : 30} />
+            }
             cardHeader={"Umsatz im ersten Quartal"}
             cardText={"301.101$"}
             cardBg={"rgb(254,251,229)"}
           />
         </div>
-        <div className="flex-2 rounded-md  h-full ">
+        <div className="left-side-sec-col flex-2 rounded-md  h-full ">
           <MapChart />
         </div>
-        <div className="flex-2 h-full">
+        <div className="left-side-third-col flex-2">
           {data ? (
             <AntdTable columns={columns} data={data} itemsOnAPage={3} />
           ) : (
@@ -138,7 +143,7 @@ const Home = (props) => {
           )}
         </div>
       </div>
-      <div className="h-100 w-100 d-flex gap-4 px-5 py-1">
+      <div className="detail-charts h-100 w-100 d-flex gap-4 px-5 py-1">
         <div className="detail-chart-containers p-4  mt-2 w-72">
           <DonutChart
             chartId={"progressTwo"}

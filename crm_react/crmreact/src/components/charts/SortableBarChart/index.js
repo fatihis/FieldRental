@@ -14,19 +14,22 @@ const SortableBarChart = ({ chartId }) => {
   }, []);
   useEffect(() => {
     if (seconds % 5 === 0) {
-      var dummyAlphabet = [
-        "Januar",
-        "Februar",
-        "März",
-        "April",
-        "Juni",
-        "Juli",
-        "August",
-        "September",
-        "Oktober",
-        "November",
-        "Dezember",
-      ];
+      var dummyAlphabet =
+        window.innerWidth > 1900
+          ? [
+              "Januar",
+              "Februar",
+              "März",
+              "April",
+              "Juni",
+              "Juli",
+              "August",
+              "September",
+              "Oktober",
+              "November",
+              "Dezember",
+            ]
+          : ["März", "April", "Juni", "Juli", "August", "September", "Oktober"];
 
       var data = [];
       dummyAlphabet.forEach((letterDummy) => {
@@ -45,7 +48,8 @@ const SortableBarChart = ({ chartId }) => {
     $("." + chartId).empty();
     if (val !== []) {
       var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-        width = 660 - margin.left - margin.right,
+        width =
+          (window.innerWidth > 1900 ? 660 : 550) - margin.left - margin.right,
         height = 270 - margin.top - margin.bottom;
 
       var formatPercent = d3.format(".0%");

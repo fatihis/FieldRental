@@ -102,7 +102,7 @@ const AddWorkerPage = (props) => {
     }, 2500);
   };
   return (
-    <div className="  mt-20 p-10  d-flex  flex-column align-items-center justify-content-center ">
+    <div className="  mt-20 p-10 xl:p-4  d-flex  flex-column align-items-center justify-content-center ">
       <h2 className=" fw-bold  text-left self-center font-semibold">
         Benutzer Anlegen
       </h2>

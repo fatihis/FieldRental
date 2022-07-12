@@ -87,7 +87,6 @@ const PersonalEdit = (props) => {
   const [vehicleListLocal, setVehicleListLocal] = useState();
   useEffect(() => {
     setVehicleListLocal(vehicleList);
-    debugger;
   }, [vehicleList]);
   const updatePersonalHandle = (field, value) => {
     var updateElement = {
@@ -101,7 +100,7 @@ const PersonalEdit = (props) => {
     setChangedAttributes(tempArray);
   };
   return isShown ? (
-    <div className="w-100 h-100 px-10 py-10 position-relative">
+    <div className="w-100 h-100 px-10 py-10 xl:py-0 xl:pt-5 position-relative">
       <div className="bg-image position-absolute top-0 right-96">
         <img src={bgImage}></img>{" "}
       </div>
@@ -143,7 +142,7 @@ const PersonalEdit = (props) => {
       {choosen != undefined && choosen.name.length > 0 ? (
         <div className="container-ro rounded-sm w-100 h-100  flex bg-slate-200  ">
           <div className="field-wrapper flex-1 w-100 h-100 p-10">
-            <div className="field-container w-100 h-28 flex flex-col">
+            <div className="field-container w-100 flex flex-col">
               <EditInputContainer headerText={"Name"}>
                 <Input
                   bordered={false}
@@ -344,7 +343,7 @@ const PersonalEdit = (props) => {
                 <Select
                   disabled={isEditable}
                   placeholder="Select a Vehicle"
-                  style={{ width: 280 }}
+                  style={{ width: 250 }}
                   defaultValue={choosen._id}
                   onChange={(e) => updatePersonalHandle("vehicleId", e)}
                 >

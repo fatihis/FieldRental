@@ -11,20 +11,20 @@ const MapChart = (props) => {
 
   useEffect(() => {
     $(".map-chart").empty();
-    var width = 760,
+    var width = window.innerWidth > 1900 ? 660 : 500,
       height = 450,
       focused = null,
       geoPath;
     var svg = d3
       .select(".map-chart")
       .append("svg")
-      .attr("viewBox", "0 0 660 450")
+      .attr("viewBox", "0 0 " + width + " 450")
       .attr("preserveAspectRatio", "xMinYMin meet");
 
     svg
       .append("rect")
       .attr("class", "background")
-      .attr("viewBox", "0 0 660 450")
+      .attr("viewBox", "0 0 " + width + " 450")
       .attr("preserveAspectRatio", "xMinYMin meet");
 
     var g = svg.append("g").append("g").attr("id", "states");

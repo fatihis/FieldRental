@@ -17,3 +17,18 @@
 .loaderdiv {
   box-sizing: border-box;
 }
+
+@media (min-width: 1280px) and (max-width: 1560px) {
+  .field-wrapper {
+    padding: 5px 5px !important;
+    width: 381px !important;
+  }
+  .container-ro {
+    width: 1200px !important;
+    max-height: 555px;
+  }
+  .form-column {
+    margin-right: 2.5rem !important;
+    max-width: 330px;
+  }
+}

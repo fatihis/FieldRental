@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./index.css";
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
@@ -23,17 +23,27 @@ import carPlus from "../../../assets/car-plus.png";
 import carDetail from "../../../assets/car-manufacturing.png";
 import userPhoto from "../../../assets/bill.jpg";
 import { MainContext, MainContextProvider } from "../../../api/MainContext";
+import $ from "jquery";
 const MainTemplate = (props) => {
-  const [collapseMenu, setCollapseMenu] = useState(false);
+  const [collapseMenu, setCollapseMenu] = useState(true);
   const [pageName, setPageName] = useState("Übersicht");
   const [parentPageName, setParentPageName] = useState("Übersicht");
   const [picturesState, setPictures] = useState("Übersicht");
+  const [screenResolution, setScreenResolution] = useState(1920);
   const mainContext = useContext(MainContext);
   const navigator = useNavigate();
+  useEffect(() => {
+    setScreenResolution(window.innerWidth);
+  }, []);
+  useEffect(() => {
+    setCollapseMenu(screenResolution > 1900 ? false : true);
+    console.log(screenResolution);
+  }, [screenResolution]);
+
   // const mainContext = useContext(mainContext);
   if (mainContext.userLogin) {
     return (
-      <div className="main-wrapper max-h-screen">
+      <div className="main-wrapper ">
         <ProSidebar collapsed={collapseMenu}>
           <SidebarHeader>
             <div className="d-flex justify-content-between align-items-center">
@@ -57,8 +67,14 @@ const MainTemplate = (props) => {
               ) : (
                 <div></div>
               )}
-              <a onClick={() => setCollapseMenu(!collapseMenu)}>
-                <AiOutlineMenu size={30} />
+              <a
+                onClick={() => {
+                  if (screenResolution > 1900) {
+                    setCollapseMenu(!collapseMenu);
+                  }
+                }}
+              >
+                {screenResolution > 1900 && <AiOutlineMenu size={30} />}
               </a>
             </div>
           </SidebarHeader>
@@ -158,11 +174,12 @@ const MainTemplate = (props) => {
               </SubMenu>
             </Menu>
           </SidebarContent>
-          <SidebarFooter>
-            <p> Copyright </p>
-          </SidebarFooter>
+          {/* <SidebarFooter>
+            <p> {!collapseMenu ? "Copyright" : ""} </p>
+          </SidebarFooter> */}
         </ProSidebar>
-        <div className="d-flex flex-column w-100 max-h-screen">
+        <div className="sidebar-bg"></div>
+        <div className="content-container d-flex flex-column w-100 max-h-screen">
           <div className="d-flex flex-row justify-content-between">
             <div className="d-flex flex-column">
               <h3 className="mt-4 mx-lg-5 fw-bold">{mainContext.pageName}</h3>

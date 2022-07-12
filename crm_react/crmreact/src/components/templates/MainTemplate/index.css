@@ -17,3 +17,32 @@
   height: 50px;
   border-radius: 30%;
 }
+@media (min-width: 1280px) and (max-width: 1560px) {
+  .content-container {
+    max-width: 1270px !important;
+    max-height: unset;
+  }
+  .main-wrapper {
+    height: 914px;
+  }
+  .pro-sidebar {
+    height: auto;
+  }
+  .pro-sidebar.collapsed
+    .pro-menu
+    > ul
+    > .pro-menu-item.pro-sub-menu
+    > .pro-inner-list-item
+    > .popper-inner {
+    width: fit-content;
+  }
+  .sidebar-bg {
+    display: block;
+    position: absolute;
+    content: "";
+    width: 80px;
+    height: 850px;
+    background-color: #1d1d1d;
+    overflow: hidden;
+  }
+}

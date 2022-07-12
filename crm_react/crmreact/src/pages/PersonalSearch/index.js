@@ -17,7 +17,6 @@ const PersonalSearch = (props) => {
   }, [mainContext.personalListAutoComplete]);
 
   const handleSearch = (value) => {
-    debugger;
     const results = searchResult(value);
     var filteredResults = results.filter((element) => {
       return element !== undefined;

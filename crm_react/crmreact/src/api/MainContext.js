@@ -81,7 +81,6 @@ export const MainContextProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((result) => {
-        debugger;
         setVehicleCount(result);
         return result;
       })
@@ -102,7 +101,6 @@ export const MainContextProvider = ({ children }) => {
     )
       .then((response) => response.json())
       .then((result) => {
-        debugger;
         setNonActiveVehicleCount(result);
         return result;
       })
