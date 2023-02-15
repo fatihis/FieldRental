@@ -9,11 +9,15 @@
 <h4 align="center">A minimal crm app built on top of <a href="https://github.com/fatihis/crm-react-api-deutsch" target="_blank">CRM API</a>.</h4>
 
 <p align="center">
+  <a href="#vercel">Vercel</a> •
   <a href="#key-features">Key Features</a> •
-  <a href="#related">Related</a> •
+  <a href="#related">Related</a> 
 </p>
 
-![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
+## Vercel
+
+[Current Vercel Deployment](https://field-rental.vercel.app/login)
+admin - 123
 
 ## Key Features
 
@@ -36,6 +40,6 @@
 
 ## Related
 
-[CRM API]https://github.com/fatihis/crm-react-api-deutsch)
+[CRM API](https://github.com/fatihis/crm-react-api-deutsch)
 
 
